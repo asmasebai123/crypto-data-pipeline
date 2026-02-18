@@ -176,3 +176,10 @@ Les logs sont sauvegardés dans le dossier `logs/` :
   → Solution : inscription gratuite sur coingecko.com
 - **kafka-python incompatible Python 3.12**
   → Solution : migration vers `kafka-python-ng`
+
+  ---
+  ## 🌐 Dashboard en ligne
+
+**URL publique** : https://crypto-data-pipeline-8mrtpexxnwydrp9dbehvt5.streamlit.app
+
+Le dashboard est accessible 24/7 et se met à jour automatiquement.

@@ -260,7 +260,7 @@ streamlit run dashboard/app.py
 
 ## 👤 Auteur
 
-**Asma SEBAI**  
+**Asma Sebai**  
 Ingénieur Data | ING2 S2  
 📧 asmasebai2003@gmail.com  
 🔗 [GitHub](https://github.com/asmasebai123) | [LinkedIn](https://linkedin.com/in/asmasebai)

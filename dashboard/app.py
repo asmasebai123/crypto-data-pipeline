@@ -17,11 +17,13 @@ st.set_page_config(
 )
 
 # ─── Connexion DB ─────────────────────────────────────────────────
-DB_URL = "postgresql://admin:password123@localhost:5432/crypto_db"
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from config import get_db_url
 
 @st.cache_resource
 def get_engine():
-    return create_engine(DB_URL)
+    return create_engine(get_db_url())
 
 @st.cache_data(ttl=60)  # Rafraichit toutes les 60 secondes
 def load_data(query: str) -> pd.DataFrame:

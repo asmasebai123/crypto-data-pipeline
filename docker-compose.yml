@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # ─── Base de données PostgreSQL ───────────────────────────────
   postgres:
     image: postgres:15
     container_name: crypto_postgres
@@ -10,12 +9,11 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password123
     ports:
-      - "5432:5432"          # Port accessible sur ton PC
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data   # Sauvegarde les données
+      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  # ─── Zookeeper (nécessaire pour Kafka) ────────────────────────
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     container_name: crypto_zookeeper
@@ -24,7 +22,6 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     restart: unless-stopped
 
-  # ─── Kafka (streaming) ────────────────────────────────────────
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: crypto_kafka
@@ -41,22 +38,3 @@ services:
 
 volumes:
   postgres_data:
-
-
-dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile.dashboard
-    ports:
-      - "8501:8501"
-    depends_on:
-      - postgres
-    environment:
-      - DB_HOST=postgres
-orchestrator:
-    build:
-      context: .
-      dockerfile: Dockerfile.orchestrator
-    depends_on:
-      - postgres
-      - kafka

@@ -595,7 +595,9 @@ with tab5:
             st.dataframe(
                 disp_vol.style
                     .format({"Prix moyen":"${:,.2f}","Écart-type":"${:,.2f}","Volatilité (%)":"{:.2f}%"})
-                    .background_gradient(subset=["Volatilité (%)"], cmap="RdYlGn_r"),
+                    .map(lambda v: "color:#ff5c6c;font-weight:600" if isinstance(v,(int,float)) and v > 5
+                         else ("color:#00e0a0;font-weight:600" if isinstance(v,(int,float)) and v <= 5 else ""),
+                         subset=["Volatilité (%)"]),
                 use_container_width=True)
         else:
             st.info("Pas encore de données de prix.")

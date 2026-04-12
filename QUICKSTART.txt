@@ -1,0 +1,138 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║           🚀 CRYPTO DATA PIPELINE - QUICKSTART                      ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1️⃣  INSTALLATION (5 min)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Installe Docker Desktop
+https://www.docker.com/products/docker-desktop
+
+# Clone / va dans le dossier du projet
+cd /sessions/peaceful-sweet-wright/mnt/crypto_data_project
+
+# Installe les dépendances
+pip install -r requirements.txt
+pip install kafka-python
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2️⃣  LANCER LE PIPELINE (1 commande)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+python run_pipeline.py
+
+Voilà ! 🎉
+
+Cela lance automatiquement :
+  ✅ Kafka (Docker)
+  ✅ Ingestion Batch (toutes les 10 min)
+  ✅ Kafka Producer (chaque 5 sec)
+  ✅ Kafka Consumer (continu)
+  ✅ Dashboard Streamlit
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3️⃣  ACCÉDER AU DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+http://localhost:8501
+
+(Attendre ~20 secondes le temps que Streamlit démarre)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4️⃣  OPTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Mode batch seulement (sans Kafka)
+python run_pipeline.py --mode batch
+
+# Mode streaming seulement
+python run_pipeline.py --mode stream
+
+# Sans dashboard
+python run_pipeline.py --no-dashboard
+
+# Kafka local (sans Docker)
+python run_pipeline.py --local-kafka
+
+# Afficher l'aide
+python run_pipeline.py --help
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 5️⃣  LOGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir les logs en direct
+tail -f logs/pipeline.log
+
+# Logs par composant
+tail -f logs/ingestion.log          # Batch
+tail -f logs/kafka_producer.log     # Producer
+tail -f logs/kafka_consumer.log     # Consumer
+tail -f logs/cloud_ingestion.log    # Cloud (si utilisé)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 6️⃣  ARRÊTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Appuie sur : CTRL + C
+
+(Le script arrête proprement tout)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 7️⃣  DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Docker n'est pas installé
+   → Installe Docker Desktop
+
+❌ Port 9092 déjà utilisé
+   → docker-compose down
+   → Relance
+
+❌ Kafka unhealthy
+   → Attendre 30 sec
+   → docker logs crypto_kafka
+
+❌ Dashboard timeout
+   → Attendre 20 sec
+   → Recharger la page
+
+Pour plus d'aide → Voir LANCER_PIPELINE.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📊 ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CoinGecko API
+     ↓
+  main.py (batch chaque 10 min) + kafka_producer (chaque 5 sec)
+     ↓                                    ↓
+raw_crypto_prices               Kafka Topic "crypto_prices"
+     ↓                                    ↓
+     ↓                            kafka_consumer
+     ↓                                    ↓
+     └────────────────┬────────────────┘
+                      ↓
+            PostgreSQL Database
+                      ↓
+            Dashboard Streamlit (5 onglets)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🔗 RESSOURCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 Guide Complet        → GUIDE_COMPLET_PROJET.md
+📖 Ingestion Détaillée  → GUIDE_INGESTION_DETAILLE.md
+📖 Lancer le Pipeline   → LANCER_PIPELINE.md
+📖 Docker Compose       → docker-compose.yml
+
+🌐 Dashboard            → http://localhost:8501
+📊 PostgreSQL           → localhost:5432
+🎯 Kafka                → localhost:9092
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRÊT ? Lance :  python run_pipeline.py  🚀

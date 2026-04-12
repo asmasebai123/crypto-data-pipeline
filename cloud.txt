@@ -1,0 +1,3 @@
+
+LabIDEURL	https://d2x0r9zklyjg2m.cloudfront.net/?folder=/home/ec2-user/environment
+LabIDEPassword	50fad9b0

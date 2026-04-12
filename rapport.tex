@@ -1,0 +1,840 @@
+\documentclass[12pt,a4paper]{article}
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{booktabs}
+
+% Configuration de la page
+\geometry{margin=2.5cm}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Pipeline Data Engineering}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+% Couleurs pour le code
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{sparkcolor}{RGB}{232,144,26}
+\definecolor{greenok}{RGB}{0,140,80}
+
+% Configuration du code
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{codebg},
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{orange},
+}
+
+% Boîte Spark
+\newcommand{\sparkbox}[1]{%
+  \vspace{4pt}
+  \noindent\colorbox{orange!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+    {\color{sparkcolor}\textbf{⚡ Spark :}} #1
+  }}
+  \vspace{4pt}
+}
+
+\begin{document}
+
+% ===== PAGE DE TITRE =====
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries Pipeline Data Engineering\\[0.5cm] End-to-End\par}
+    \vspace{1.5cm}
+
+    {\Large Collecte, Traitement et Visualisation\\
+    des Prix de Cryptomonnaies\par}
+    \vspace{3cm}
+
+    {\Large\textbf{Présenté par :}\\[0.3cm]
+    \large Asma Sebai\par}
+    \vspace{2cm}
+
+    {\large Formation : Ingénieur Data\\
+    ING2 -- Semestre 2\par}
+    \vspace{1cm}
+
+    {\large Avril 2026\par}
+
+    \vfill
+
+    {\large Dashboard en ligne :\\
+    \url{https://crypto-data-pipeline-8mrtpexxnwydrp9dbehvt5.streamlit.app}\par}
+\end{titlepage}
+
+% ===== TABLE DES MATIÈRES =====
+\tableofcontents
+\newpage
+
+% ===== 1. CONTEXTE ET OBJECTIF =====
+\section{Contexte et Objectif du Projet}
+
+\subsection{Contexte}
+Le marché des cryptomonnaies représente aujourd'hui un volume d'échange quotidien de plusieurs milliards de dollars. Caractérisé par une forte volatilité et une évolution continue 24h/24, ce marché nécessite des outils d'analyse en temps réel pour permettre aux investisseurs et analystes de prendre des décisions éclairées.
+
+Dans le cadre du module Data Engineering, ce projet vise à démontrer la maîtrise complète de la chaîne de valeur des données, depuis l'ingestion jusqu'à la visualisation finale, avec une architecture \textbf{production-ready} intégrant Apache Spark.
+
+\subsection{Objectif}
+Concevoir et déployer un pipeline Data Engineering end-to-end capable de :
+\begin{itemize}
+    \item \textbf{Collecter} automatiquement les prix de 5 cryptomonnaies majeures (Bitcoin, Ethereum, Solana, XRP, BNB)
+    \item \textbf{Stocker} les données brutes et transformées dans une base relationnelle cloud
+    \item \textbf{Traiter} les données avec un moteur \textbf{dual-engine Pandas/Spark} selon le volume
+    \item \textbf{Orchestrer} le pipeline de manière automatisée avec gestion d'erreurs
+    \item \textbf{Visualiser} les résultats via un dashboard pro interactif accessible publiquement
+\end{itemize}
+
+\subsection{Périmètre}
+Le projet couvre l'intégralité du cycle de vie des données :
+\begin{itemize}[noitemsep]
+    \item Ingestion batch (API) et streaming (Kafka)
+    \item Stockage relationnel cloud (Neon PostgreSQL)
+    \item Transformations métier en Pandas ET en PySpark (architecture dual-engine)
+    \item Analyses avancées via Spark SQL (volatilité, dominance marché)
+    \item Orchestration (Prefect)
+    \item Dashboard interactif 5 onglets (Streamlit + Plotly)
+    \item Déploiement cloud (Neon + Streamlit Cloud)
+\end{itemize}
+
+% ===== 2. SOURCES DE DONNÉES =====
+\section{Sources de Données}
+
+\subsection{Source 1 — CoinGecko API (Ingestion Batch)}
+\textbf{Type :} API REST publique\\
+\textbf{URL :} \url{https://api.coingecko.com/api/v3/coins/markets}\\
+\textbf{Fréquence :} Toutes les 10 minutes\\
+\textbf{Format :} JSON
+
+\textbf{Données collectées :}
+\begin{itemize}[noitemsep]
+    \item Prix actuel (\texttt{current\_price})
+    \item Capitalisation boursière (\texttt{market\_cap})
+    \item Volume échangé 24h (\texttt{total\_volume})
+    \item Variation 24h en \% (\texttt{price\_change\_percentage\_24h})
+    \item Prix max/min 24h (\texttt{high\_24h}, \texttt{low\_24h})
+    \item Timestamp de collecte (\texttt{fetched\_at})
+\end{itemize}
+
+\textbf{Cryptomonnaies :} Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Ripple (XRP), Binance Coin (BNB)
+
+\textbf{Justification :} CoinGecko est l'une des sources les plus fiables du marché crypto avec une API gratuite robuste et documentée. La fréquence de 10 minutes permet de respecter les limites du plan gratuit (30 appels/minute) tout en maintenant une granularité suffisante pour l'analyse.
+
+\subsection{Source 2 — Apache Kafka (Ingestion Streaming)}
+\textbf{Type :} Flux de messages temps réel\\
+\textbf{Topic :} \texttt{crypto\_prices}\\
+\textbf{Fréquence :} Toutes les 5 secondes\\
+\textbf{Format :} JSON
+
+\textbf{Données simulées :}
+\begin{itemize}[noitemsep]
+    \item Identifiant crypto (\texttt{coin\_id})
+    \item Prix instantané (\texttt{price})
+    \item Variation instantanée (\texttt{variation\_pct})
+    \item Horodatage événement (\texttt{event\_time})
+\end{itemize}
+
+\textbf{Justification :} Kafka est le standard industriel pour le streaming de données. La simulation permet de démontrer la maîtrise de l'architecture streaming sans nécessiter une connexion WebSocket payante aux exchanges.
+
+\subsection{Volume de données}
+Sur une période de 7 jours :
+\begin{itemize}[noitemsep]
+    \item \textbf{Données batch :} $\sim$5 cryptos $\times$ 144 points/jour $\times$ 7 jours = \textbf{$\sim$5040 lignes}
+    \item \textbf{Données streaming :} $\sim$5 cryptos $\times$ 17280 points/jour $\times$ 7 jours = \textbf{$\sim$600 000 lignes potentielles}
+\end{itemize}
+
+Volume total traité : \textbf{$\sim$605 000 enregistrements}
+
+% ===== 3. ARCHITECTURE =====
+\section{Architecture du Pipeline}
+
+\subsection{Vue d'ensemble}
+Le pipeline suit une architecture ETL enrichie d'une couche streaming, d'une orchestration automatisée et d'un moteur \textbf{dual-engine Pandas/PySpark} pour les transformations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/architecture_diagram.png}
+    \caption{Architecture globale du pipeline}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection{Flux de données détaillé}
+Le pipeline propose deux chemins d'ingestion parallèles :
+\begin{enumerate}
+    \item \textbf{Batch (toutes les 10 minutes)} : Appel direct à l'API CoinGecko via le script main.py, récupération de données complètes (20 cryptomonnaies avec toutes leurs métriques)
+    \item \textbf{Streaming (continu, chaque 5 secondes)} : Producteur Kafka génère des prix simulés, les envoie au topic \texttt{crypto\_prices}, le consommateur les récupère et les sauvegarde immédiatement en base
+\end{enumerate}
+
+Les deux sources alimentent la base de données PostgreSQL qui alimente ensuite les transformations, l'orchestration et finalement le dashboard.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/data_flow_diagram.png}
+    \caption{Flux de données : chemins batch et streaming}
+    \label{fig:dataflow}
+\end{figure}
+
+\subsection{Composants principaux}
+
+\subsubsection{Couche d'ingestion}
+\begin{itemize}
+    \item \textbf{Batch :} Script Python (\texttt{ingestion/main.py}) appelant l'API CoinGecko via HTTP
+    \item \textbf{Streaming :} Producer Kafka (\texttt{kafka\_producer.py}) + Consumer (\texttt{kafka\_consumer.py})
+\end{itemize}
+
+\subsubsection{Couche de stockage}
+\begin{itemize}
+    \item \textbf{Développement local :} PostgreSQL 15 dans conteneur Docker
+    \item \textbf{Production :} Neon PostgreSQL (cloud, région EU-Central-1)
+    \item \textbf{Tables principales :}
+    \begin{itemize}[noitemsep]
+        \item \texttt{raw\_crypto\_prices} : données brutes batch
+        \item \texttt{stream\_crypto\_prices} : données streaming
+        \item \texttt{transform\_hourly\_avg}, \texttt{transform\_daily\_volume} : agrégations
+        \item \texttt{transform\_daily\_ranking}, \texttt{transform\_alerts} : classements/alertes
+        \item \texttt{spark\_volatility}, \texttt{spark\_market\_dominance} : analyses Spark SQL
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Couche de transformation — Architecture Dual-Engine}
+
+\sparkbox{Cette couche supporte deux moteurs : \textbf{Pandas} (volumes modérés) et \textbf{PySpark} (volumes importants), sélectionnés automatiquement ou manuellement.}
+
+\begin{itemize}
+    \item \textbf{Moteur Pandas :} \texttt{cleaning.py}, \texttt{aggregations.py}, \texttt{rankings.py}, \texttt{alerts.py}
+    \item \textbf{Moteur Spark :} \texttt{spark\_engine.py}, \texttt{spark\_transformations.py}
+    \item \textbf{Orchestrateur :} \texttt{run\_transforms.py} (sélection automatique selon volume)
+\end{itemize}
+
+\subsubsection{Couche d'orchestration}
+\begin{itemize}
+    \item \textbf{Outil :} Prefect 3.x
+    \item \textbf{Flows :} Pipeline complet avec gestion des dépendances et retry automatique
+    \item \textbf{Planification :} Exécution toutes les 10 minutes
+\end{itemize}
+
+\subsubsection{Couche de visualisation}
+\begin{itemize}
+    \item \textbf{Outil :} Streamlit v1.42 + Plotly v5.24
+    \item \textbf{Interface :} Dashboard 5 onglets, dark theme professionnel
+    \item \textbf{Déploiement :} Streamlit Cloud (URL publique)
+    \item \textbf{Rafraîchissement :} Automatique toutes les 60 secondes
+\end{itemize}
+
+% ===== 4. STACK TECHNOLOGIQUE =====
+\section{Stack Technologique}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{5.5cm}|}
+\hline
+\textbf{Couche} & \textbf{Technologie} & \textbf{Justification} \\
+\hline
+Ingestion Batch    & Python + CoinGecko   & API gratuite, fiable, données structurées \\
+\hline
+Ingestion Stream   & Apache Kafka         & Standard industrie pour flux temps réel \\
+\hline
+Stockage           & PostgreSQL (Neon)    & Données structurées, requêtes analytiques SQL \\
+\hline
+Transformation     & Pandas               & Volume modéré, développement rapide \\
+\hline
+\rowcolor{orange!15}
+Transformation Big Data & \textbf{PySpark 3.5} & \textbf{Architecture scalable, Window functions, Spark SQL} \\
+\hline
+Orchestration      & Prefect              & Dashboard intégré, retry automatique \\
+\hline
+Visualisation      & Streamlit + Plotly   & Déploiement rapide, interface interactive \\
+\hline
+Déploiement Dev    & Docker Compose       & Reproductibilité garantie \\
+\hline
+\end{tabular}
+\caption{Stack technologique du projet}
+\end{table}
+
+\subsection{Architecture Dual-Engine : Pandas \& PySpark}
+
+Le projet intègre une \textbf{architecture dual-engine} permettant de choisir le moteur de traitement selon le volume de données et le contexte d'exécution :
+
+\begin{lstlisting}[language=bash]
+# Mode automatique (Pandas < 50k lignes, Spark >= 50k lignes)
+python transformations/run_transforms.py
+
+# Forcer Spark (demonstration, production)
+python transformations/run_transforms.py --engine spark
+
+# Forcer Pandas (developpement local)
+python transformations/run_transforms.py --engine pandas
+\end{lstlisting}
+
+\textbf{Justification de l'approche dual-engine :}
+\begin{itemize}
+    \item Le volume actuel ($\sim$5000 lignes) est traité efficacement par Pandas
+    \item PySpark est activé pour démontrer l'architecture \textit{production-ready}
+    \item Si les données passent à 5M+ lignes (plus de cryptos, données minute), Spark s'active automatiquement sans modifier le code
+    \item Les Window Functions de Spark sont plus expressives que les \texttt{groupby/rank} Pandas pour les classements
+\end{itemize}
+
+% ===== 5. TRANSFORMATIONS MÉTIER =====
+\section{Transformations Métier}
+
+Chaque transformation est implémentée en \textbf{deux versions} : Pandas (performance sur petits volumes) et PySpark (scalabilité sur grands volumes).
+
+\subsection{Transformation 1 — Nettoyage des données}
+\textbf{Fichier Pandas :} \texttt{cleaning.py} \quad \textbf{Fichier Spark :} \texttt{spark\_transformations.py}
+
+\textbf{Opérations :}
+\begin{itemize}[noitemsep]
+    \item Suppression des lignes avec valeurs nulles dans les colonnes critiques
+    \item Suppression des doublons (même \texttt{coin\_id} + même \texttt{timestamp})
+    \item Suppression des prix aberrants ($\leq 0$)
+    \item Correction des types de données
+    \item Remplissage des valeurs manquantes
+\end{itemize}
+
+\sparkbox{Version PySpark : \texttt{spark\_clean\_raw\_prices()} utilise \texttt{dropna()}, \texttt{dropDuplicates()}, \texttt{F.coalesce()} et des casts explicites via \texttt{DoubleType()}, \texttt{TimestampType()}.}
+
+\subsection{Transformation 2 — Moyenne horaire}
+\textbf{Fichier :} \texttt{aggregations.py} / \texttt{spark\_transformations.py}
+
+\textbf{Logique Pandas :}
+\begin{lstlisting}[language=Python]
+df.groupby(['coin_id', hour]).agg(
+    avg_price=('current_price', 'mean'),
+    min_price=('current_price', 'min'),
+    max_price=('current_price', 'max')
+)
+\end{lstlisting}
+
+\sparkbox{Version PySpark : utilise \texttt{date\_trunc('hour', col('fetched\_at'))} natif en Spark SQL, plus performant sur grands volumes.}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|r|r|r|}
+\hline
+\textbf{Crypto} & \textbf{Heure} & \textbf{Moy} & \textbf{Min} & \textbf{Max} \\
+\hline
+Bitcoin & 2026-02-15 15:00 & 95 067 & 94 900 & 95 200 \\
+\hline
+\end{tabular}
+\caption{Exemple de résultat -- Moyenne horaire}
+\end{table}
+
+\subsection{Transformation 3 — Classement journalier}
+\textbf{Fichier :} \texttt{rankings.py} / \texttt{spark\_transformations.py}
+
+\textbf{Logique :} Classement des cryptos par performance 24h (variation en \%).
+
+\sparkbox{Version PySpark : utilise les \textbf{Window Functions} -- le point fort de Spark. Plus expressif et scalable à des milliards de lignes sans modification.}
+
+\begin{lstlisting}[language=Python]
+# Version Spark avec Window Functions
+from pyspark.sql.window import Window
+from pyspark.sql.functions import rank, desc, row_number
+
+# Derniere valeur du jour par crypto
+w_last = Window.partitionBy("coin_id", "day").orderBy(desc("fetched_at"))
+
+# Classement par performance
+w_rank = Window.partitionBy("day").orderBy(desc("price_change_pct_24h"))
+
+result = (sdf
+    .withColumn("_rn", row_number().over(w_last))
+    .filter(col("_rn") == 1)
+    .withColumn("rank", rank().over(w_rank))
+)
+\end{lstlisting}
+
+\textbf{Exemple de résultat :}
+\begin{enumerate}[noitemsep]
+    \item Solana : +9.49\%
+    \item BNB : +6.02\%
+    \item Bitcoin : +2.28\%
+\end{enumerate}
+
+\subsection{Transformation 4 — Détection d'alertes}
+\textbf{Fichier :} \texttt{alerts.py} / \texttt{spark\_transformations.py}
+
+\textbf{Logique :}
+\begin{lstlisting}[language=Python]
+if variation >= +5%:
+    alert_level = "HAUSSE FORTE"
+elif variation <= -5%:
+    alert_level = "BAISSE FORTE"
+\end{lstlisting}
+
+\sparkbox{Version PySpark : utilise \texttt{F.when(...).otherwise(...)} et \texttt{F.concat()} pour construire les messages d'alerte, sans boucle Python.}
+
+\textbf{Exemple d'alerte générée :}\\
+\texttt{Bitcoin : +12.87\% (HAUSSE FORTE) - Prix: \$59,905.71}
+
+\subsection{Transformation 5 — Volume journalier}
+\textbf{Fichier :} \texttt{aggregations.py} / \texttt{spark\_transformations.py}
+
+\textbf{Logique :} Somme des volumes échangés par crypto par jour.
+
+\textbf{Exemple :} Bitcoin -- Volume total journalier : 28 milliards USD
+
+% ===== 6. INTÉGRATION APACHE SPARK =====
+\section{Intégration Apache Spark}
+
+\subsection{Architecture des fichiers Spark}
+
+Trois nouveaux fichiers ont été ajoutés au projet :
+
+\begin{itemize}
+    \item \texttt{transformations/spark\_engine.py} : gestion de la SparkSession
+    \item \texttt{transformations/spark\_transformations.py} : toutes les transformations en PySpark
+    \item \texttt{transformations/run\_transforms.py} : mise à jour avec sélection automatique du moteur
+\end{itemize}
+
+\subsection{Gestion de la SparkSession}
+
+\begin{lstlisting}[language=Python]
+# spark_engine.py
+SparkSession.builder
+    .appName("CryptoDataPipeline")
+    .master("local[1]")
+    .config("spark.sql.shuffle.partitions", "2")
+    .config("spark.driver.memory", "1g")
+    .getOrCreate()
+\end{lstlisting}
+
+La SparkSession est implémentée comme un \textbf{singleton} : une seule instance est créée et réutilisée tout au long du pipeline. La méthode \texttt{auto\_select\_engine(nb\_rows, threshold=50000)} choisit automatiquement entre Pandas et Spark selon le volume.
+
+\subsection{Sélection automatique du moteur}
+
+\begin{lstlisting}[language=Python]
+def auto_select_engine(nb_rows: int, threshold: int = 50_000) -> str:
+    """
+    - Pandas : rapide sur petits volumes (< 50 000 lignes)
+    - Spark  : scalable sur grands volumes (>= 50 000 lignes)
+    """
+    return "spark" if nb_rows >= threshold else "pandas"
+\end{lstlisting}
+
+\subsection{Analyses Spark SQL avancées}
+
+En plus des 5 transformations de base, le module Spark ajoute 3 analyses avancées via \textbf{Spark SQL} directement sur les DataFrames :
+
+\begin{enumerate}
+    \item \textbf{Volatilité des prix} : calcul de l'écart-type et du coefficient de variation ($\sigma / \mu \times 100$)
+\begin{lstlisting}[language=SQL]
+SELECT coin_id, name,
+    ROUND(STDDEV(current_price), 4) AS price_stddev,
+    ROUND(AVG(current_price), 4)    AS price_avg,
+    ROUND(STDDEV(current_price) / AVG(current_price) * 100, 2) AS volatility_pct
+FROM crypto_prices
+GROUP BY coin_id, name
+ORDER BY volatility_pct DESC
+\end{lstlisting}
+
+    \item \textbf{Dominance du marché} : part de capitalisation boursière de chaque crypto
+\begin{lstlisting}[language=SQL]
+WITH latest AS (
+    SELECT coin_id, name, market_cap,
+        ROW_NUMBER() OVER (PARTITION BY coin_id ORDER BY fetched_at DESC) rn
+    FROM crypto_prices WHERE market_cap > 0
+)
+SELECT l.coin_id, ROUND(l.market_cap / SUM(l.market_cap) OVER() * 100, 2)
+    AS dominance_pct
+FROM latest WHERE rn = 1
+\end{lstlisting}
+
+    \item \textbf{Heure optimale} : heure de la journée avec le prix moyen le plus élevé par crypto
+\end{enumerate}
+
+\subsection{Passage Pandas $\rightarrow$ Spark : solution Windows}
+
+Sur Windows avec Python 3.12, la méthode standard \texttt{createDataFrame(pandas\_df)} provoque un crash du Python worker (\texttt{EOFException}). La solution adoptée est de passer par un \textbf{fichier CSV temporaire} :
+
+\begin{lstlisting}[language=Python]
+def pandas_to_spark(df: pd.DataFrame) -> SparkDF:
+    # 1. Pandas ecrit le CSV (pas de Spark implique)
+    tmp_path = os.path.join(tempfile.gettempdir(), "crypto_spark_input.csv")
+    df.to_csv(tmp_path, index=False)
+
+    # 2. Spark lit le CSV via son moteur JVM natif
+    #    -> aucun Python worker solicite pour la lecture
+    return get_spark().read.csv(tmp_path, header=True, inferSchema=True)
+\end{lstlisting}
+
+Cette approche est aussi utilisée en production pour ingérer des fichiers externes dans Spark sans passer par la mémoire Python.
+
+% ===== 7. ORCHESTRATION =====
+\section{Orchestration et Automatisation}
+
+\subsection{Outil utilisé : Prefect}
+Prefect est un framework d'orchestration moderne permettant de définir des workflows sous forme de \textit{flows} et \textit{tasks}.
+
+\subsection{Pipeline principal}
+Le flow principal exécute les étapes suivantes dans l'ordre :
+\begin{enumerate}[noitemsep]
+    \item Création des tables PostgreSQL (si nécessaire)
+    \item Appel API CoinGecko (avec retry automatique)
+    \item Sauvegarde données brutes
+    \item Chargement et nettoyage (\textbf{Pandas ou Spark selon volume})
+    \item Transformations (en parallèle) :
+    \begin{itemize}[noitemsep]
+        \item Moyenne horaire
+        \item Volume journalier
+        \item Classement (Window Functions Spark)
+        \item Alertes
+        \item \textbf{[Nouveau] Analyses Spark SQL} (volatilité, dominance)
+    \end{itemize}
+    \item Génération rapport de synthèse
+\end{enumerate}
+
+\subsection{Gestion des erreurs}
+\begin{itemize}
+    \item \textbf{Retry automatique :} 3 tentatives avec délai de 60 secondes
+    \item \textbf{Logs structurés :} Sauvegarde dans \texttt{logs/transformations.log}
+    \item \textbf{Fallback moteur :} Si Spark échoue, basculement automatique sur Pandas
+\end{itemize}
+
+\subsection{Planification}
+Le pipeline s'exécute automatiquement toutes les 10 minutes via le scheduler Prefect.
+
+% ===== 8. DASHBOARD =====
+\section{Dashboard et Visualisation -- Version 2.1}
+
+\subsection{Technologies}
+\begin{itemize}
+    \item \textbf{Framework :} Streamlit 1.42
+    \item \textbf{Graphiques :} Plotly (interactifs)
+    \item \textbf{Style :} Dark theme professionnel (custom CSS)
+    \item \textbf{Déploiement :} Streamlit Cloud
+    \item \textbf{URL :} \url{https://crypto-data-pipeline-8mrtpexxnwydrp9dbehvt5.streamlit.app}
+\end{itemize}
+
+\subsection{Interface -- Navigation par onglets}
+
+Le dashboard est organisé en \textbf{5 onglets} thématiques :
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{9cm}|}
+\hline
+\textbf{Onglet} & \textbf{Contenu} \\
+\hline
+📊 Vue d'ensemble &
+KPI cards par crypto (prix, variation 24h colorée),
+graphique d'évolution des prix, classement journalier,
+tableau résumé avec coloration conditionnelle \\
+\hline
+📈 Analyse technique &
+Graphique chandelier OHLC horaire + volume,
+heatmap de corrélation entre cryptos,
+performance relative (base 100) \\
+\hline
+⚠️ Alertes \& Volume &
+Alertes de volatilité (seuil configurable),
+barres de variation 24h, volume journalier,
+évolution du volume dans le temps (area chart) \\
+\hline
+⚡ Streaming Kafka &
+Prix en temps réel (line chart),
+distribution des variations (histogramme),
+tableau des derniers événements \\
+\hline
+\rowcolor{orange!15}
+🔥 Spark Analytics &
+\textbf{Volatilité des prix (écart-type Spark SQL)},
+\textbf{Dominance du marché (camembert Spark SQL)},
+tableaux comparatifs \\
+\hline
+\end{tabular}
+\caption{Onglets du dashboard v2.1}
+\end{table}
+
+\subsection{Nouvelles fonctionnalités -- Version 2.1}
+
+\begin{itemize}
+    \item \textbf{Dark theme} : fond \texttt{\#0f1117}, cartes avec dégradé, couleurs néon distinctes par crypto
+    \item \textbf{KPI cards} : cartes stylisées avec couleur de marque par crypto et indicateurs colorés ($\color{greenok}\blacktriangle$ hausses, $\color{red}\blacktriangledown$ baisses)
+    \item \textbf{Chandelier OHLC} : calcul Open/High/Low/Close par heure depuis les données brutes
+    \item \textbf{Heatmap corrélation} : matrice de corrélation des rendements entre cryptos
+    \item \textbf{Performance relative} : toutes les cryptos normalisées à 100 pour comparaison
+    \item \textbf{Spark Analytics} : analyses calculées via SQL PostgreSQL en ligne, sans nécessiter Spark en local
+    \item \textbf{Auto-refresh} : toggle dans la sidebar pour activation du refresh automatique 60s
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering [CAPTURE D'ÉCRAN DU DASHBOARD V2.1 À INSÉRER]}}
+    \caption{Interface du dashboard Streamlit v2.1 -- Dark theme, 5 onglets}
+\end{figure}
+
+% ===== 9. DÉPLOIEMENT =====
+\section{Déploiement}
+
+\subsection{Architecture de déploiement}
+
+\textbf{Environnement de développement :}
+\begin{itemize}[noitemsep]
+    \item PostgreSQL : Docker local (port 5432)
+    \item Kafka : Docker local (port 9092)
+    \item Dashboard : localhost:8501
+    \item Transformations : \texttt{python run\_transforms.py --engine spark}
+\end{itemize}
+
+\textbf{Environnement de production :}
+\begin{itemize}[noitemsep]
+    \item PostgreSQL : Neon Cloud (EU-Central-1)
+    \item Dashboard : Streamlit Cloud
+    \item Analyses Spark : calculées via SQL PostgreSQL (Streamlit Cloud sans Spark)
+\end{itemize}
+
+\subsection{Dépendances (\texttt{requirements.txt})}
+
+\begin{lstlisting}
+streamlit==1.42.0
+pandas==2.2.3
+numpy==1.26.4
+plotly==5.24.1
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+requests==2.32.3
+# pyspark==3.5.1  <- uniquement en local
+\end{lstlisting}
+
+PySpark n'est pas inclus dans \texttt{requirements.txt} pour Streamlit Cloud car il pèse 500MB+ et n'est pas nécessaire pour le dashboard (les analyses Spark sont recalculées via SQL).
+
+\subsection{Migration des données}
+Un script de migration (\texttt{migrate\_to\_neon.py}) transfère les données du PostgreSQL local vers Neon Cloud. Un script dédié (\texttt{fetch\_history.py}) récupère l'historique réel des 7 derniers jours.
+
+\subsection{Reproductibilité}
+Le fichier \texttt{docker-compose.yml} garantit la reproductibilité de l'environnement local en un seul clic.
+
+% ===== 10. TESTS ET QUALITÉ =====
+\section{Tests et Qualité du Code}
+
+\subsection{Tests unitaires}
+18 tests unitaires couvrent les transformations Pandas :
+\begin{itemize}[noitemsep]
+    \item Nettoyage : 5 tests
+    \item Agrégations : 3 tests
+    \item Alertes : 5 tests
+    \item Classement : 2 tests
+    \item Qualité des données : 3 tests
+\end{itemize}
+\textbf{Résultat :} 18/18 tests passés
+
+\subsection{Logs structurés}
+Tous les composants génèrent des logs structurés sauvegardés dans \texttt{logs/} avec horodatage et niveau de criticité.
+
+% ===== 11. DIFFICULTÉS RENCONTRÉES =====
+\section{Difficultés Rencontrées et Solutions}
+
+\subsection{Problème 1 — SSL Certificate Error}
+\textbf{Contexte :} Réseau universitaire avec proxy HTTPS bloquant les certificats.
+
+\textbf{Solution :}
+\begin{lstlisting}[language=Python]
+urllib3.disable_warnings()
+requests.get(url, verify=False)
+\end{lstlisting}
+
+\subsection{Problème 2 — CoinGecko 403 Forbidden}
+\textbf{Contexte :} Depuis 2024, CoinGecko requiert une clé API même pour le plan gratuit.
+
+\textbf{Solution :} Inscription gratuite + ajout header \texttt{x-cg-demo-api-key}.
+
+\subsection{Problème 3 — kafka-python incompatible Python 3.12}
+\textbf{Contexte :} Librairie \texttt{kafka-python} non maintenue, incompatible Python 3.12.
+
+\textbf{Solution :} Migration vers \texttt{kafka-python-ng}.
+
+\subsection{Problème 4 — Déploiement cloud base de données}
+\textbf{Contexte :} Streamlit Cloud ne peut pas accéder à PostgreSQL local.
+
+\textbf{Solution :} Migration vers Neon PostgreSQL (gratuit) avec script automatisé.
+
+\subsection{Problème 5 — PySpark Python Worker Crash (Windows)}
+\textbf{Contexte :} Sur Windows avec Python 3.12 et PySpark 3.5, la méthode \texttt{createDataFrame(pandas\_df)} provoque systématiquement un crash des workers Python avec \texttt{java.io.EOFException}. L'erreur est liée à une incompatibilité de sérialisation entre Python 3.12 et le protocole interne de PySpark 3.5.
+
+\textbf{Analyse :} Lors de \texttt{createDataFrame()}, PySpark lance des sous-processus Python pour sérialiser les données ligne par ligne. Ces workers Python 3.12 échouent à communiquer avec le JVM via le protocole Py4J, entraînant une interruption brutale du stream de données.
+
+\textbf{Solution :} Passer par un fichier CSV temporaire. Pandas écrit les données dans un fichier CSV, puis Spark le lit directement via son moteur JVM -- aucun Python worker n'est sollicité pour la lecture.
+
+\begin{lstlisting}[language=Python]
+# Solution : conversion via CSV temporaire
+tmp_path = tempfile.gettempdir() + "/crypto_spark_input.csv"
+df.to_csv(tmp_path, index=False)              # Pandas -> CSV
+sdf = spark.read.csv(tmp_path, header=True)   # CSV -> Spark (JVM)
+\end{lstlisting}
+
+\textbf{Configuration Spark pour Windows :}
+\begin{itemize}[noitemsep]
+    \item \texttt{local[1]} : thread unique, évite les conflits de processus
+    \item \texttt{spark.sql.execution.arrow.pyspark.enabled = false} : désactive Arrow (source du crash)
+    \item \texttt{spark.ui.enabled = false} : allège Spark en désactivant l'interface web
+\end{itemize}
+
+\subsection{Problème 6 — background\_gradient non disponible sur Streamlit Cloud}
+\textbf{Contexte :} La méthode \texttt{.background\_gradient()} de Pandas Styler requiert \texttt{matplotlib}, non installé sur Streamlit Cloud (Python 3.13).
+
+\textbf{Solution :} Remplacement par \texttt{.map()} avec une fonction CSS conditionnelle, sans dépendance externe.
+
+% ===== 12. RÉSULTATS =====
+\section{Résultats}
+
+\subsection{Métriques}
+\begin{itemize}[noitemsep]
+    \item \textbf{Données collectées :} $\sim$5050 lignes sur 7 jours
+    \item \textbf{Fréquence mise à jour :} Toutes les 10 minutes (batch) + 5 secondes (streaming)
+    \item \textbf{Uptime dashboard :} 24/7 via Streamlit Cloud
+    \item \textbf{Temps de réponse :} $<$2 secondes (requêtes PostgreSQL)
+    \item \textbf{Tests :} 100\% de passage (18/18)
+\end{itemize}
+
+\subsection{Fonctionnalités délivrées}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Fonctionnalité} & \textbf{Statut} \\
+\hline
+Pipeline automatisé end-to-end & ✓ \\
+\hline
+Dashboard accessible publiquement & ✓ \\
+\hline
+Détection automatique d'alertes & ✓ \\
+\hline
+Historique 7 jours consultable & ✓ \\
+\hline
+Infrastructure cloud déployée & ✓ \\
+\hline
+\textbf{Intégration PySpark (dual-engine)} & \textbf{✓ [Nouveau]} \\
+\hline
+\textbf{Analyses Spark SQL (volatilité, dominance)} & \textbf{✓ [Nouveau]} \\
+\hline
+\textbf{Dashboard dark theme 5 onglets} & \textbf{✓ [Nouveau]} \\
+\hline
+\textbf{Graphique chandelier OHLC} & \textbf{✓ [Nouveau]} \\
+\hline
+\textbf{Heatmap corrélation} & \textbf{✓ [Nouveau]} \\
+\hline
+\end{tabular}
+\caption{Récapitulatif des fonctionnalités}
+\end{table}
+
+% ===== 13. LIMITES ET PERSPECTIVES =====
+\section{Limites et Perspectives d'Amélioration}
+
+\subsection{Limites actuelles}
+\begin{itemize}
+    \item Volume limité : 5 cryptos uniquement
+    \item Granularité : données toutes les 10 minutes (API gratuite)
+    \item Streaming : simulation, pas de vraie connexion WebSocket aux exchanges
+    \item PySpark en mode \texttt{local[1]} uniquement (pas de vrai cluster distribué)
+\end{itemize}
+
+\subsection{Améliorations possibles}
+\begin{enumerate}
+    \item \textbf{Cluster Spark :} Déployer Spark sur un vrai cluster (Databricks, EMR, GCP Dataproc) pour traitement massivement distribué
+    \item \textbf{Real-time :} Connexion WebSocket directe aux exchanges (Binance, Coinbase) + Spark Structured Streaming
+    \item \textbf{ML/AI :} Modèle prédictif des prix (LSTM, Prophet) via MLlib ou scikit-learn
+    \item \textbf{Alertes :} Notifications Slack/Email sur alertes critiques
+    \item \textbf{Monitoring :} Grafana + Prometheus pour métriques pipeline
+    \item \textbf{CI/CD :} GitHub Actions pour tests automatiques à chaque push
+\end{enumerate}
+
+% ===== 14. CONCLUSION =====
+\section{Conclusion}
+
+Ce projet a permis de démontrer la maîtrise complète de la chaîne de valeur Data Engineering, depuis l'ingestion de données depuis des sources hétérogènes (API REST et streaming Kafka) jusqu'à la visualisation interactive via un dashboard déployé en production.
+
+L'intégration d'\textbf{Apache Spark} constitue le point technique le plus avancé du projet. L'architecture \textbf{dual-engine} permet de traiter les données soit avec Pandas (efficace sur petits volumes), soit avec PySpark (scalable sur grands volumes), avec sélection automatique selon le seuil de 50 000 lignes. Les \textbf{Window Functions} Spark pour le classement et les \textbf{requêtes Spark SQL} pour l'analyse de volatilité et de dominance marché démontrent une maîtrise des patterns avancés de Spark.
+
+Le \textbf{dashboard v2.1} constitue également une avancée significative : l'interface dark theme avec 5 onglets thématiques, le graphique chandelier OHLC, la heatmap de corrélation et la section Spark Analytics offrent une expérience utilisateur de niveau professionnel.
+
+Les compétences techniques acquises incluent :
+\begin{itemize}[noitemsep]
+    \item Ingestion batch et streaming (Python, Kafka)
+    \item Stockage relationnel cloud (PostgreSQL Neon)
+    \item Transformations métier Pandas ET PySpark (architecture dual-engine)
+    \item Spark SQL, Window Functions, SparkSession management
+    \item Orchestration avec Prefect
+    \item Déploiement cloud (Neon, Streamlit Cloud)
+    \item Dashboard interactif professionnel (Streamlit + Plotly)
+    \item Tests unitaires et qualité du code
+\end{itemize}
+
+Le pipeline est opérationnel 24/7 et accessible publiquement à l'adresse \\
+\url{https://crypto-data-pipeline-8mrtpexxnwydrp9dbehvt5.streamlit.app}.
+
+% ===== ANNEXES =====
+\section*{Annexes}
+\addcontentsline{toc}{section}{Annexes}
+
+\subsection*{Annexe A — Code source}
+Dépôt GitHub : \url{https://github.com/asmasebai123/crypto-data-pipeline}
+
+\subsection*{Annexe B — Dashboard}
+URL : \url{https://crypto-data-pipeline-8mrtpexxnwydrp9dbehvt5.streamlit.app}
+
+\subsection*{Annexe C — Structure du projet}
+\begin{lstlisting}
+crypto_data_project/
+|-- ingestion/
+|   |-- main.py              # Ingestion batch CoinGecko
+|   |-- database.py          # Connexion PostgreSQL
+|   |-- kafka_producer.py    # Producteur Kafka
+|   |-- kafka_consumer.py    # Consommateur Kafka
+|   `-- fetch_history.py     # Historique reel
+|-- transformations/
+|   |-- cleaning.py          # Nettoyage (Pandas)
+|   |-- aggregations.py      # Agregations (Pandas)
+|   |-- rankings.py          # Classements (Pandas)
+|   |-- alerts.py            # Alertes (Pandas)
+|   |-- spark_engine.py      # [Nouveau] SparkSession
+|   |-- spark_transformations.py  # [Nouveau] PySpark
+|   `-- run_transforms.py    # [MAJ] Dual-engine
+|-- orchestration/
+|   |-- flows.py             # Flows Prefect
+|   `-- scheduler.py         # Planification
+|-- dashboard/
+|   |-- app.py               # [MAJ v2.1] Dashboard
+|   `-- config.py            # Configuration DB
+|-- tests/
+|   `-- test_transformations.py  # 18 tests unitaires
+|-- docker-compose.yml
+`-- requirements.txt
+\end{lstlisting}
+
+\subsection*{Annexe D — Technologies utilisées}
+\begin{itemize}[noitemsep]
+    \item Python 3.12
+    \item PostgreSQL 15 / Neon Cloud
+    \item Apache Kafka 7.4.0
+    \item \textbf{Apache Spark / PySpark 3.5.1 [Nouveau]}
+    \item Prefect 3.x
+    \item Streamlit 1.42
+    \item Pandas 2.2.3 / NumPy 1.26.4
+    \item Plotly 5.24
+    \item Docker Compose
+\end{itemize}
+
+\end{document}

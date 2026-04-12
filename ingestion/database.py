@@ -7,6 +7,28 @@ logger = logging.getLogger(__name__)
 
 # ─── Connexion ────────────────────────────────────────────────────
 def get_connection():
+    import os
+
+    # En cloud (Streamlit Cloud ou en prod), utiliser DATABASE_URL
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        # Format: postgresql://user:password@host:port/dbname
+        import urllib.parse
+        try:
+            parsed = urllib.parse.urlparse(database_url)
+            return psycopg2.connect(
+                host=parsed.hostname,
+                port=parsed.port or 5432,
+                dbname=parsed.path.lstrip('/'),
+                user=parsed.username,
+                password=parsed.password,
+                sslmode='require'  # Neon Cloud requiert SSL
+            )
+        except Exception as e:
+            logger.warning(f"Erreur connexion cloud: {e}, utilisation localhost")
+
+    # Fallback: localhost (développement local)
     return psycopg2.connect(
         host="localhost",
         port=5432,

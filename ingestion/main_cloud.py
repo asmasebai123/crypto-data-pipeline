@@ -26,8 +26,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger("cloud_ingestion")
 
-# ─── URL Neon (remplace avec ta vraie URL) ───────────────────────
-NEON_URL = "postgresql://neondb_owner:npg_bgGCEw9sofm6@ep-spring-paper-agif76oh-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+# ─── URL Neon (depuis variable d'environnement) ─────────────────
+NEON_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://user:password@localhost:5432/crypto_db"  # Fallback local
+)
 
 # ─── Clé API CoinGecko ───────────────────────────────────────────
 def load_api_key():

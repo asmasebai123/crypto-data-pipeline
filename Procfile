@@ -1,1 +1,1 @@
-worker: python run_pipeline.py --mode batch --no-kafka
+worker: python start_railway.py

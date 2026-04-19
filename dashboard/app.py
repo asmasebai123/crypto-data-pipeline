@@ -118,20 +118,21 @@ h3 { color: var(--text-primary) !important; font-size: 1.1rem !important; font-w
 p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
-    background: var(--card) !important;
-    border: 1px solid var(--border) !important;
+    background: #EFF6FF !important;
+    border: 1px solid #BFDBFE !important;
     border-radius: 12px !important;
     padding: 20px !important;
     margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
 .kpi-card:hover {
-    border-color: var(--primary-light);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1) !important;
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15) !important;
+    background: #F0F9FF !important;
 }
 
 .kpi-label { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }

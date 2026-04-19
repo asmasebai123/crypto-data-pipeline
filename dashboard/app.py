@@ -13,148 +13,205 @@ st.set_page_config(
     page_title="Crypto Pipeline Dashboard",
     page_icon="₿",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",  # Sidebar minimale
 )
 
-# ── CSS ───────────────────────────────────────────────────────────────────────
+# ── CSS DESIGN ORIGINAL ───────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* fond global */
-.stApp { background-color: #0f1117; color: #e0e6f0; }
-section[data-testid="stSidebar"] {
-    background-color: #161b27;
-    border-right: 1px solid #2a3548;
+/* PALETTE PERSONNALISÉE */
+:root {
+    --primary: #a97070;      /* Rose poudré */
+    --secondary: #f5ede0;    /* Beige clair */
+    --accent: #5c484d;       /* Marron profond */
+    --gold: #c9b8a8;         /* Doré chaud */
+    --gray: #9a9191;         /* Gris doux */
 }
 
-/* titres Streamlit */
-h1, h2, h3, h4 { color: #e8f0fe !important; }
-p, li, span, label { color: #c8d8f0; }
+/* Fond élégant */
+.stApp {
+    background: linear-gradient(135deg, #f5ede0 0%, #f9f5f0 100%);
+    color: #5c484d;
+}
 
-/* ── KPI cards ── */
+/* Sidebar minimale et élégante */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #5c484d 0%, #6d5a63 100%);
+    border-right: none;
+}
+
+/* Titres élégants */
+h1, h2 { color: #5c484d !important; font-weight: 600; letter-spacing: 1px; }
+h3, h4 { color: #a97070 !important; font-weight: 500; }
+p, li, span, label { color: #6d5a63; font-size: 14px; }
+
+/* ── KPI cards (Design moderne) ── */
 .kpi-card {
-    background: #1a2236;
-    border: 1px solid #2a3f5f;
-    border-radius: 10px;
-    padding: 16px;
+    background: white;
+    border: 2px solid #c9b8a8;
+    border-radius: 12px;
+    padding: 20px;
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(169, 112, 112, 0.08);
+    transition: all 0.3s ease;
+}
+.kpi-card:hover {
+    box-shadow: 0 8px 24px rgba(169, 112, 112, 0.15);
+    border-color: #a97070;
 }
 .kpi-label {
-    color: #90a4c0;
-    font-size: 0.75rem;
+    color: #9a9191;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 6px;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 .kpi-value {
-    color: #ffffff;
-    font-size: 1.5rem;
+    color: #5c484d;
+    font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
-.kpi-up   { color: #00e0a0; font-size: 0.88rem; font-weight: 600; }
-.kpi-down { color: #ff5c6c; font-size: 0.88rem; font-weight: 600; }
-.kpi-flat { color: #90a4c0; font-size: 0.88rem; }
+.kpi-up   { color: #a97070; font-size: 0.9rem; font-weight: 600; }
+.kpi-down { color: #c9b8a8; font-size: 0.9rem; font-weight: 600; }
+.kpi-flat { color: #9a9191; font-size: 0.9rem; }
 
-/* ── Section header ── */
+/* ── Section header (Élégant) ── */
 .sec-title {
-    color: #c8d8f0;
-    font-size: 1rem;
+    color: #5c484d;
+    font-size: 1.1rem;
     font-weight: 700;
-    border-left: 3px solid #4a7fd4;
-    padding-left: 10px;
-    margin: 14px 0 10px 0;
+    border-left: 4px solid #a97070;
+    padding-left: 12px;
+    margin: 20px 0 15px 0;
+    letter-spacing: 0.5px;
 }
 
-/* ── Alert boxes ── */
+/* ── Alert boxes (Soft & Elegant) ── */
 .alert-up {
-    background: #0d2e22;
-    border: 1px solid #00c880;
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin: 5px 0;
-    color: #00e0a0;
+    background: #faf7f4;
+    border: 2px solid #a97070;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    color: #a97070;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 .alert-down {
-    background: #2e0d14;
-    border: 1px solid #ff5c6c;
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin: 5px 0;
-    color: #ff7b87;
+    background: #faf7f4;
+    border: 2px solid #c9b8a8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    color: #9a9191;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 .alert-ok {
-    background: #0d2218;
-    border: 1px solid #00c880;
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: #00e0a0;
+    background: #faf7f4;
+    border: 2px solid #a97070;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #a97070;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
-/* ── Rank row ── */
+/* ── Rank row (Modern) ── */
 .rank-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1a2236;
-    border-radius: 8px;
-    padding: 9px 14px;
-    margin: 4px 0;
-    border-left: 3px solid #4a7fd4;
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-left: 4px solid #a97070;
+    box-shadow: 0 2px 8px rgba(169, 112, 112, 0.06);
 }
-.rank-num { color: #90a4c0; font-size: 0.8rem; font-weight: 700; background: #2a3f5f; border-radius: 4px; padding: 2px 7px; }
-.rank-name { color: #dce8ff; font-weight: 600; margin-left: 8px; }
-.rank-price { color: #90a4c0; font-size: 0.82rem; }
+.rank-num { color: white; font-size: 0.85rem; font-weight: 700; background: #a97070; border-radius: 6px; padding: 4px 10px; }
+.rank-name { color: #5c484d; font-weight: 600; margin-left: 12px; }
+.rank-price { color: #9a9191; font-size: 0.85rem; }
 
-/* ── Spark badge ── */
+/* ── Spark badge (Elegant) ── */
 .spark-badge {
-    background: linear-gradient(90deg, #c8440a, #e8901a);
-    color: #fff;
-    border-radius: 6px;
-    padding: 4px 12px;
-    font-size: 0.78rem;
+    background: linear-gradient(90deg, #a97070, #c9b8a8);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
     font-weight: 700;
     display: inline-block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 .spark-note {
-    background: #1a2236;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: #90a4c0;
-    font-size: 0.82rem;
-    margin-bottom: 14px;
+    background: white;
+    border: 2px solid #c9b8a8;
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: #6d5a63;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    line-height: 1.5;
 }
 
-/* ── Tabs ── */
+/* ── Tabs (Modern & Clean) ── */
 .stTabs [data-baseweb="tab-list"] {
-    background: #161b27;
-    border-bottom: 1px solid #2a3548;
-    gap: 4px;
+    background: transparent;
+    border-bottom: 2px solid #c9b8a8;
+    gap: 8px;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #90a4c0;
-    border-radius: 6px 6px 0 0;
-    padding: 7px 16px;
-    font-size: 0.88rem;
+    color: #9a9191;
+    border-radius: 0;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
 }
 .stTabs [aria-selected="true"] {
-    background: #1a2236 !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
+    background: transparent !important;
+    color: #a97070 !important;
+    border-bottom: 3px solid #a97070 !important;
+    font-weight: 700 !important;
 }
 
 /* ── Dataframes ── */
-.stDataFrame { border: 1px solid #2a3f5f; border-radius: 8px; }
+.stDataFrame {
+    border: 2px solid #c9b8a8 !important;
+    border-radius: 10px !important;
+    background: white !important;
+}
 
-/* ── Sidebar labels ── */
+/* ── Sidebar labels (Elegant) ── */
 .stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label {
-    color: #c8d8f0 !important;
+    color: #f5ede0 !important;
     font-size: 0.85rem !important;
+    font-weight: 600 !important;
+}
+
+/* ── Main title (Hero) ── */
+h1 {
+    color: #5c484d !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 10px !important;
+}
+
+/* ── Buttons ── */
+.stButton > button {
+    background: linear-gradient(90deg, #a97070, #c9b8a8) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 10px 20px !important;
+}
+.stButton > button:hover {
+    box-shadow: 0 4px 12px rgba(169, 112, 112, 0.3) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -175,17 +232,18 @@ def load(query: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 COLORS = {
-    "bitcoin": "#F7931A", "ethereum": "#627EEA",
-    "solana": "#9945FF",  "ripple": "#00AAE4", "binancecoin": "#F3BA2F",
+    "bitcoin": "#a97070", "ethereum": "#c9b8a8",
+    "solana": "#9a9191",  "ripple": "#6d5a63", "binancecoin": "#d4c4b8",
 }
 LAY = dict(
-    plot_bgcolor="#0f1117", paper_bgcolor="#0f1117",
-    font=dict(color="#c8d8f0", size=12),
-    xaxis=dict(gridcolor="#1e2a3a", zeroline=False, color="#90a4c0"),
-    yaxis=dict(gridcolor="#1e2a3a", zeroline=False, color="#90a4c0"),
-    legend=dict(bgcolor="#1a2236", bordercolor="#2a3f5f", borderwidth=1,
-                font=dict(color="#c8d8f0")),
+    plot_bgcolor="#f5ede0", paper_bgcolor="#f5ede0",
+    font=dict(color="#5c484d", size=12),
+    xaxis=dict(gridcolor="#ddd4ca", zeroline=False, color="#9a9191"),
+    yaxis=dict(gridcolor="#ddd4ca", zeroline=False, color="#9a9191"),
+    legend=dict(bgcolor="white", bordercolor="#c9b8a8", borderwidth=2,
+                font=dict(color="#5c484d")),
     margin=dict(l=10, r=10, t=40, b=10),
+    hovermode="x unified",
 )
 
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
@@ -198,7 +256,7 @@ with st.sidebar:
 
     periode = st.selectbox(
         "Période", ["Dernière heure", "6 dernières heures",
-                    "24 dernières heures", "7 derniers jours"], index=2)
+                    "24 dernières heures", "7 derniers jours", "📊 Historique complet"], index=2)
 
     seuil = st.slider("Seuil alerte (%)", 1, 20, 5)
 
@@ -223,6 +281,8 @@ delta_map = {
     "Dernière heure": timedelta(hours=1),
     "6 dernières heures": timedelta(hours=6),
     "24 dernières heures": timedelta(hours=24),
+    "7 derniers jours": timedelta(days=7),
+    "📊 Historique complet": timedelta(days=36500),  # ~100 ans (affiche tout)
     "7 derniers jours": timedelta(days=7),
 }
 since     = datetime.utcnow() - delta_map[periode]

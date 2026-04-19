@@ -1,0 +1,179 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                    AIDE MÉMOIRE — PRÉSENTATION PROJET                          ║
+║                        19 Avril 2026 — Crypto Pipeline                         ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+┌─ INTRODUCTION ─────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│ "Bonjour, je vais vous présenter mon projet de pipeline de données             │
+│  cryptographiques avec architecture scalable et dashboard en temps réel"       │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ ARCHITECTURE (3 min) ─────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  1. INGESTION (CoinGecko API)                                                  │
+│     → Toutes les 10 minutes                                                    │
+│     → 5 cryptos: Bitcoin, Ethereum, XRP, BNB, Solana                           │
+│     → 2800 lignes/jour                                                         │
+│                                                                                 │
+│  2. TRANSFORMATION (DUAL-ENGINE)                                               │
+│     → Pandas pour < 50k lignes ✅ (MAINTENANT)                                 │
+│     → Spark pour ≥ 50k lignes 🚀 (PRÊT)                                       │
+│     → Automatique, zéro config                                                 │
+│                                                                                 │
+│  3. STOCKAGE (Neon PostgreSQL)                                                 │
+│     → 5 tables de transformation                                               │
+│     → Requêtes SQL optimisées                                                  │
+│                                                                                 │
+│  4. DASHBOARD (Streamlit)                                                      │
+│     → 5 onglets d'analyse                                                      │
+│     → Design original (rose/beige/marron)                                      │
+│     → Graphiques Plotly interactifs                                            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ POINTS CLÉS À INSISTER ───────────────────────────────────────────────────────┐
+│                                                                                 │
+│  ✅ SCALABLE                                                                   │
+│     "Ma code peut passer de 3633 à 1 million de lignes sans modification"     │
+│                                                                                 │
+│  ✅ PRODUCTION-READY                                                           │
+│     "Tout est sur Railway (24/7), pas en local"                                │
+│                                                                                 │
+│  ✅ INTELLIGENT                                                                │
+│     "Système Pandas/Spark qui choisit tout seul le bon moteur"                │
+│                                                                                 │
+│  ✅ ORIGINAL                                                                   │
+│     "Design unique, pas de dark theme comme les autres projets IA"            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "Pourquoi Pandas et pas Spark dès le départ?" ──────────┐
+│                                                                                 │
+│ RÉPONSE:                                                                       │
+│ "Excellente question! Spark est pour les millions de lignes, mais j'ai         │
+│  seulement 3633. Spark coûterait $100+/mois et Pandas traite ça en 5 sec.     │
+│  MAIS le code est prêt: au seuil de 50k lignes, il bascule automatiquement.   │
+│  C'est une décision consciente, pas un oubli."                                │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "Pourquoi tu n'utilises pas Kafka?" ─────────────────────┐
+│                                                                                 │
+│ RÉPONSE:                                                                       │
+│ "Kafka en production cloud = complexe et cher ($50+/mois). Ma solution est:   │
+│  batch via CoinGecko API toutes les 10 min. C'est simple, fiable, gratuit,    │
+│  et amplement suffisant pour 2800 lignes/jour. Si un jour j'avais besoin      │
+│  de streaming réel, je pourrais basculer à Kafka managé (Upstash)."          │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "Où sont les données transformées?" ──────────────────────┐
+│                                                                                 │
+│ RÉPONSE + ACTION:                                                              │
+│ "Dans Neon PostgreSQL, 5 tables."                                              │
+│                                                                                 │
+│ Tables:                                                                        │
+│  • raw_crypto_prices → données brutes                                         │
+│  • transform_hourly_avg → moyennes horaires                                   │
+│  • transform_daily_volume → volumes par jour                                  │
+│  • transform_daily_ranking → classements                                      │
+│  • spark_volatility & spark_dominance → analyses Spark                        │
+│                                                                                 │
+│ [Montrez main_cloud.py ligne ~70]                                             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "Comment ça marche le dual-engine?" ─────────────────────┐
+│                                                                                 │
+│ RÉPONSE + CODE:                                                                │
+│ "Regardez main_cloud.py:"                                                     │
+│                                                                                 │
+│  1. Compter les lignes                                                        │
+│     cur.execute("SELECT COUNT(*) FROM raw_crypto_prices")                     │
+│                                                                                 │
+│  2. Décider                                                                    │
+│     if nb_rows < 50000:                                                       │
+│         run_pandas_transformations()  # Ici maintenant (3633)                  │
+│     else:                                                                      │
+│         run_spark_transformations()   # Là si ça grandit                      │
+│                                                                                 │
+│  3. Les résultats sont IDENTIQUES!                                            │
+│     Juste l'exécution qui s'adapte.                                           │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "C'est où le code Spark?" ────────────────────────────────┐
+│                                                                                 │
+│ RÉPONSE + ACTION:                                                              │
+│ "spark_transformations.py contient tout le code Spark. Il n'est pas           │
+│  exécuté maintenant parce que pas besoin, mais il est prêt."                  │
+│                                                                                 │
+│ [Montrez le fichier dans VS Code]                                             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ SI LE PROF DEMANDE: "Les données en prod, c'est où?" ─────────────────────────┐
+│                                                                                 │
+│ RÉPONSE:                                                                       │
+│ "Railway cloud. Pipeline s'exécute 24/7. Tous les 10 minutes:                 │
+│  1. Appel CoinGecko API                                                       │
+│  2. Insert dans Neon                                                          │
+│  3. Transformations Pandas                                                    │
+│  4. Dashboard se recharge"                                                    │
+│                                                                                 │
+│ Procfile: "worker: python start_railway.py"                                   │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ DÉROULEMENT TIMELINE ─────────────────────────────────────────────────────────┐
+│                                                                                 │
+│ Min 0-2    Intro + Architecture globale                                       │
+│ Min 2-4    Ingestion (CoinGecko)                                              │
+│ Min 4-8    Transformation (Pandas/Spark dual-engine) ← IMPORTANT              │
+│ Min 8-10   Dashboard (design, tabs, graphiques)                               │
+│ Min 10-12  Production (Railway 24/7)                                          │
+│ Min 12-14  Démo + questions                                                   │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ FICHIERS À MONTRER EN ORDRE ──────────────────────────────────────────────────┐
+│                                                                                 │
+│ 1. VS Code → GUIDE_FICHIERS_PROJET.md (vue d'ensemble)                        │
+│ 2. ingestion/main_cloud.py (architecture Pandas/Spark)                        │
+│ 3. dashboard/app.py (design + visuels)                                        │
+│ 4. presentation.pptx (slides)                                                 │
+│ 5. Streamlit dashboard live (si connexion)                                    │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ PHRASES CLÉS À RETENIR ───────────────────────────────────────────────────────┐
+│                                                                                 │
+│ • "Architecture scalable et production-ready"                                 │
+│ • "Dual-engine intelligent: Pandas maintenant, Spark demain si besoin"       │
+│ • "Zéro changement de code quand ça grandit"                                  │
+│ • "Pipeline 24/7 sur Railway, pas en local"                                   │
+│ • "Design original et unique, pas generic dark theme"                         │
+│ • "Décision consciente entre simplicité et scalabilité"                       │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─ CE QU'IL NE FAUT PAS DIRE ────────────────────────────────────────────────────┐
+│                                                                                 │
+│ ✗ "Je n'utilise pas Spark parce que je ne savais pas comment"                 │
+│ ✓ "Je n'utilise pas Spark parce que c'est inutile pour 3633 lignes"           │
+│                                                                                 │
+│ ✗ "Kafka ne marche pas, j'ai un problème"                                     │
+│ ✓ "Kafka est overkill pour mon use case batch"                                │
+│                                                                                 │
+│ ✗ "C'est juste Pandas/Spark qui marche"                                       │
+│ ✓ "C'est une architecture intelligente qui choisit le bon moteur"             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════════
+
+BON COURAGE! 💪 Vous êtes prêt(e)! 🚀
+
+═════════════════════════════════════════════════════════════════════════════════

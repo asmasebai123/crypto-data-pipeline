@@ -5,18 +5,49 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-# ─── Connexion ────────────────────────────────────────────────────
-def get_connection():
+# ─── Charger DATABASE_URL depuis .env ────────────────────────────
+def load_database_url():
     import os
 
-    # En cloud (Streamlit Cloud ou en prod), utiliser DATABASE_URL
+    # 1. Vérifier os.environ (variables d'environnement système)
     database_url = os.environ.get("DATABASE_URL")
+    if database_url and database_url.strip():
+        logger.info(f"DATABASE_URL trouvé dans os.environ")
+        return database_url.strip()
+
+    # 2. Charger depuis .env (même répertoire ou parent)
+    env_paths = [".env", "../.env", "../../.env"]
+    for env_file in env_paths:
+        try:
+            if not os.path.exists(env_file):
+                continue
+            with open(env_file, encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        if line.startswith("DATABASE_URL="):
+                            value = line.split("=", 1)[1].strip()
+                            if value:
+                                logger.info(f"DATABASE_URL trouvé dans {env_file}")
+                                return value
+        except Exception as e:
+            logger.debug(f"Erreur lecture {env_file}: {e}")
+
+    logger.warning("DATABASE_URL non trouvé, utilisation localhost")
+    return None
+
+# ─── Connexion ────────────────────────────────────────────────────
+def get_connection():
+    import urllib.parse
+
+    # Essayer d'abord Neon Cloud
+    database_url = load_database_url()
 
     if database_url:
         # Format: postgresql://user:password@host:port/dbname
-        import urllib.parse
         try:
             parsed = urllib.parse.urlparse(database_url)
+            logger.info(f"Connexion à Neon Cloud: {parsed.hostname}")
             return psycopg2.connect(
                 host=parsed.hostname,
                 port=parsed.port or 5432,
@@ -26,9 +57,10 @@ def get_connection():
                 sslmode='require'  # Neon Cloud requiert SSL
             )
         except Exception as e:
-            logger.warning(f"Erreur connexion cloud: {e}, utilisation localhost")
+            logger.warning(f"Erreur connexion Neon: {e}, utilisation localhost")
 
     # Fallback: localhost (développement local)
+    logger.info("Connexion à PostgreSQL local (localhost)")
     return psycopg2.connect(
         host="localhost",
         port=5432,

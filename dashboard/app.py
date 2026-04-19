@@ -20,7 +20,7 @@ st.markdown("""
 
 <style>
 :root {
-    --cyan: #06B6D4;
+    --cyan: #003d7a;
     --violet: #A78BFA;
     --dark-bg: #f5f8fc;
     --dark-card: #ffffff;
@@ -42,7 +42,7 @@ code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #3a6ba5 0%, #4a7fbf 100%) !important;
-    border-right: 2px solid rgba(6, 182, 212, 0.7) !important;
+    border-right: 2px solid rgba(0, 61, 122,0.7) !important;
 }
 
 section[data-testid="stSidebar"] h3 {
@@ -79,19 +79,19 @@ section[data-testid="stSidebar"] .stMultiSelect [data-testid="stMultiSelectInput
     background: linear-gradient(135deg, var(--cyan), var(--violet)) !important;
 }
 
-h1 { color: #06B6D4 !important; font-size: 2.4rem !important; font-weight: 800 !important; }
-h2 { color: #1a2942 !important; font-size: 1.8rem !important; font-weight: 700 !important; }
-h3 { color: #06B6D4 !important; font-size: 1.3rem !important; font-weight: 600 !important; }
+h1 { color: #003d7a !important; font-size: 2.4rem !important; font-weight: 900 !important; }
+h2 { color: #003d7a !important; font-size: 1.8rem !important; font-weight: 700 !important; }
+h3 { color: #003d7a !important; font-size: 1.3rem !important; font-weight: 600 !important; }
 p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%) !important;
     backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(6, 182, 212, 0.5) !important;
+    border: 2px solid rgba(0, 61, 122,0.5) !important;
     border-radius: 16px !important;
     padding: 28px 24px !important;
     margin-bottom: 20px;
-    box-shadow: 0 8px 32px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 61, 122,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -103,7 +103,7 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
     top: 0; left: 0; right: 0;
     height: 2px;
     background: linear-gradient(90deg, var(--cyan), var(--violet), transparent);
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+    box-shadow: 0 0 20px rgba(0, 61, 122,0.6);
 }
 
 .kpi-card::after {
@@ -111,32 +111,31 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
     position: absolute;
     bottom: -1px; right: -1px;
     width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 61, 122,0.1) 0%, transparent 70%);
     border-radius: 50%;
 }
 
 .kpi-card:hover {
     transform: translateY(-8px);
-    border-color: rgba(6, 182, 212, 0.6);
-    box-shadow: 0 16px 48px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(0, 61, 122,0.6);
+    box-shadow: 0 16px 48px rgba(0, 61, 122,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-.kpi-label { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 700; }
-.kpi-value { color: var(--cyan); font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
+.kpi-label { color: #003d7a; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 900; }
+.kpi-value { color: #003d7a; font-size: 2.4rem; font-weight: 900; margin-bottom: 8px; }
 .kpi-up { color: #10B981; font-size: 0.95rem; font-weight: 700; }
 .kpi-down { color: #EF4444; font-size: 0.95rem; font-weight: 700; }
 .kpi-flat { color: var(--text-secondary); font-size: 0.95rem; }
 
 .sec-title {
-    color: var(--cyan);
+    color: #003d7a;
     font-size: 1.3rem;
     font-weight: 700;
-    border-left: 4px solid var(--violet);
+    border-left: 4px solid #003d7a;
     padding-left: 16px;
     margin: 36px 0 24px 0;
     letter-spacing: 0.5px;
     position: relative;
-    text-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
 }
 
 .sec-title::after {
@@ -177,15 +176,15 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 }
 
 .alert-ok {
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(167, 139, 250, 0.05));
-    border: 1px solid rgba(6, 182, 212, 0.4);
+    background: linear-gradient(135deg, rgba(0, 61, 122,0.15), rgba(167, 139, 250, 0.05));
+    border: 1px solid rgba(0, 61, 122,0.4);
     border-radius: 12px;
     padding: 16px 20px;
     color: var(--cyan);
     font-size: 0.95rem;
     font-weight: 700;
     backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 61, 122,0.1);
 }
 
 .rank-row {
@@ -197,16 +196,16 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
     border-radius: 12px;
     padding: 18px 20px;
     margin: 12px 0;
-    border: 1.5px solid rgba(6, 182, 212, 0.4);
+    border: 1.5px solid rgba(0, 61, 122,0.4);
     border-left: 4px solid var(--violet);
-    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 61, 122,0.12);
     transition: all 0.3s ease;
 }
 
 .rank-row:hover {
     background: linear-gradient(135deg, #f8fafb 0%, #f0f5fa 100%);
-    border-color: rgba(6, 182, 212, 0.7);
-    box-shadow: 0 8px 24px rgba(6, 182, 212, 0.2);
+    border-color: rgba(0, 61, 122,0.7);
+    box-shadow: 0 8px 24px rgba(0, 61, 122,0.2);
 }
 
 .rank-num { color: #0F172A; font-size: 0.8rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan), var(--violet)); border-radius: 8px; padding: 8px 14px; }
@@ -222,7 +221,7 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
     font-weight: 800;
     display: inline-block;
     margin-bottom: 14px;
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.6), 0 0 40px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.6), 0 0 40px rgba(0, 61, 122,0.3);
 }
 
 .spark-note {
@@ -240,7 +239,7 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 
 .stTabs [data-baseweb="tab-list"] {
     background: linear-gradient(90deg, rgba(100, 180, 220, 0.15), rgba(100, 180, 220, 0.05)) !important;
-    border-bottom: 2px solid rgba(6, 182, 212, 0.3) !important;
+    border-bottom: 2px solid rgba(0, 61, 122,0.3) !important;
     border-radius: 12px 12px 0 0;
 }
 .stTabs [data-baseweb="tab"] {
@@ -256,8 +255,8 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 .stTabs [aria-selected="true"] {
     color: white !important;
     border-bottom: 3px solid var(--cyan) !important;
-    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(167, 139, 250, 0.15)) !important;
+    text-shadow: 0 0 10px rgba(0, 61, 122,0.5);
+    background: linear-gradient(135deg, rgba(0, 61, 122,0.25), rgba(167, 139, 250, 0.15)) !important;
 }
 
 .stDataFrame {
@@ -290,20 +289,20 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 .stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label { color: var(--text-primary) !important; font-size: 0.85rem !important; font-weight: 700 !important; }
 
 .stButton > button {
-    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%) !important;
+    background: linear-gradient(135deg, #003d7a 0%, #004a94 100%) !important;
     color: white !important;
-    border: 2px solid #06B6D4 !important;
+    border: 2px solid #003d7a !important;
     border-radius: 10px !important;
-    font-weight: 800 !important;
-    font-size: 0.95rem !important;
-    padding: 14px 28px !important;
-    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    font-weight: 900 !important;
+    font-size: 1.15rem !important;
+    padding: 18px 32px !important;
+    box-shadow: 0 0 30px rgba(0, 61, 122, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     transition: all 0.3s ease !important;
 }
 .stButton > button:hover {
     transform: translateY(-3px);
-    background: linear-gradient(135deg, #0891B2 0%, #06B6D4 100%) !important;
-    box-shadow: 0 12px 40px rgba(6, 182, 212, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    background: linear-gradient(135deg, #004a94 0%, #003d7a 100%) !important;
+    box-shadow: 0 12px 40px rgba(0, 61, 122, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
 }
 
 .stAlert { border-radius: 12px !important; border: 1px solid !important; backdrop-filter: blur(8px); }
@@ -337,8 +336,8 @@ LAY = dict(
 )
 
 with st.sidebar:
-    st.markdown("<h3 style='color:#06B6D4;text-align:center;margin-bottom:16px'>Crypto Dashboard</h3>", unsafe_allow_html=True)
-    st.markdown("<hr style='border-color:rgba(6, 182, 212, 0.3);margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#003d7a;text-align:center;margin-bottom:16px'>Crypto Dashboard</h3>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(0, 61, 122,0.3);margin:8px 0'>", unsafe_allow_html=True)
 
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
     selected = st.multiselect("Cryptocurrencies", all_coins, default=all_coins)
@@ -347,7 +346,7 @@ with st.sidebar:
 
     seuil = st.slider("Alert Threshold (%)", 1, 20, 5)
 
-    st.markdown("<hr style='border-color:rgba(6, 182, 212, 0.3);margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(0, 61, 122,0.3);margin:8px 0'>", unsafe_allow_html=True)
     auto_ref = st.toggle("Auto-Refresh (60s)", value=False)
     if st.button("REFRESH", use_container_width=True):
         st.cache_data.clear()
@@ -383,7 +382,7 @@ data_count = len(raw_df) if not raw_df.empty else 0
 date_range = f"{raw_df['fetched_at'].min().strftime('%Y-%m-%d') if not raw_df.empty else 'N/A'} to {raw_df['fetched_at'].max().strftime('%Y-%m-%d') if not raw_df.empty else 'N/A'}"
 st.markdown(f"""<div style='background:linear-gradient(135deg, #f0f5fa, #ffffff);padding:20px;border-radius:12px;border-left:4px solid #06B6D4;margin-bottom:20px'>
 <h1 style='margin-bottom:8px;color:#1a2942'>Crypto Data Pipeline</h1>
-<p style='color:#4a6fa5;font-size:0.95rem;margin:8px 0'><b style='color:#06B6D4'>{data_count:,}</b> data points · Period: <b>{periode}</b> · <b>{len(selected)}</b> Assets</p>
+<p style='color:#4a6fa5;font-size:0.95rem;margin:8px 0'><b style='color:#003d7a'>{data_count:,}</b> data points · Period: <b>{periode}</b> · <b>{len(selected)}</b> Assets</p>
 <p style='color:#4a6fa5;font-size:0.85rem;margin:0'>Data Range: {date_range}</p>
 </div>""", unsafe_allow_html=True)
 
@@ -457,7 +456,7 @@ with tab2:
             if not vol_df.empty:
                 for _, row in vol_df.iterrows():
                     st.markdown(f"""<div style='background:rgba(6,182,212,0.1);border-left:3px solid #06B6D4;padding:12px;margin:8px 0;border-radius:6px'>
-                    <b style='color:#06B6D4'>{row['coin_id'].upper()}</b><br>
+                    <b style='color:#003d7a'>{row['coin_id'].upper()}</b><br>
                     <span style='color:#4a6fa5;font-size:0.85rem'>Avg: ${row['price_avg']:.2f} | StdDev: ${row['price_stddev']:.4f} | Vol: {row['volatility_pct']:.2f}%</span>
                     </div>""", unsafe_allow_html=True)
 
@@ -519,38 +518,48 @@ with tab4:
 
 with tab5:
     st.markdown("<div class='sec-title'>Spark Analytics</div>", unsafe_allow_html=True)
-    st.markdown("<div style='background:#f5f8fc;border:1.5px solid #d0e4f7;border-radius:12px;padding:16px;margin-bottom:16px'><b style='color:#1a2942'>Spark Engine:</b><span style='color:#06B6D4;font-weight:700'> READY</span> (Auto-scaling: Pandas ↔ Spark)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background:#f5f8fc;border:1.5px solid #d0e4f7;border-radius:12px;padding:16px;margin-bottom:16px'><b style='color:#1a2942'>Spark Engine:</b><span style='color:#003d7a;font-weight:700'> READY</span> (Auto-scaling: Pandas ↔ Spark)</div>", unsafe_allow_html=True)
 
     if not vol_df.empty:
-        c1, c2 = st.columns(2)
-        with c1:
-            st.markdown("<div style='color:#1a2942;font-weight:700;margin-bottom:12px'>Volatility Analysis</div>", unsafe_allow_html=True)
-            vol_display = vol_df[['coin_id', 'name', 'volatility_pct']].copy()
-            vol_display.columns = ['Coin', 'Name', 'Volatility %']
-            st.dataframe(vol_display, use_container_width=True, hide_index=True)
+        # Volatility Chart
+        fig_vol_chart = go.Figure(data=[go.Bar(
+            x=vol_df["coin_id"].str.upper(),
+            y=vol_df["volatility_pct"],
+            marker=dict(color=vol_df["volatility_pct"], colorscale="Viridis", showscale=True, colorbar=dict(title="Vol %")),
+            text=vol_df["volatility_pct"].apply(lambda x: f"{x:.2f}%"),
+            textposition="auto",
+        )])
+        fig_vol_chart.update_layout(**LAY, height=350, title=dict(text="Asset Volatility Analysis (Spark SQL)", font=dict(size=14, color="#003d7a")))
+        st.plotly_chart(fig_vol_chart, use_container_width=True)
 
-        with c2:
-            st.markdown("<div style='color:#1a2942;font-weight:700;margin-bottom:12px'>Market Statistics</div>", unsafe_allow_html=True)
-            spark_stats = pd.DataFrame({
-                'Metric': ['Total Data Points', 'Assets Analyzed', 'Time Period', 'Update Frequency', 'Data Quality'],
-                'Value': [f'{data_count:,}', f'{len(selected)}', periode, '10 min', '100%']
-            })
-            st.dataframe(spark_stats, use_container_width=True, hide_index=True)
+        # Market Dominance Pie Chart
+        if not dom_df.empty:
+            fig_dom = go.Figure(data=[go.Pie(
+                labels=dom_df["coin_id"].str.upper(),
+                values=dom_df["dominance_pct"],
+                marker=dict(colors=["#003d7a", "#1a4d99", "#3366bb", "#6699dd", "#99bbee"])
+            )])
+            fig_dom.update_layout(**LAY, height=350, title=dict(text="Market Dominance Distribution (Spark SQL)", font=dict(size=14, color="#003d7a")))
+            st.plotly_chart(fig_dom, use_container_width=True)
 
-    st.markdown("<div style='border-top:2px solid #d0e4f7;margin:20px 0;'></div>", unsafe_allow_html=True)
+        # Price Statistics Visualization
+        st.markdown("<div style='color:#1a2942;font-weight:700;margin-bottom:12px'>Price Statistics by Asset</div>", unsafe_allow_html=True)
+        price_stats = raw_df.groupby("coin_id").agg({
+            'current_price': ['min', 'max', 'mean']
+        }).reset_index()
+        price_stats.columns = ['coin_id', 'min_price', 'max_price', 'avg_price']
 
-    st.markdown("<div style='color:#1a2942;font-weight:700;margin-bottom:12px'>Advanced Spark SQL Transformations</div>", unsafe_allow_html=True)
-    spark_transforms = pd.DataFrame({
-        'Transformation': [
-            'Hourly Price Averages',
-            'Daily Trading Volume',
-            'Daily Rankings',
-            'Volatility Metrics',
-            'Market Dominance %'
-        ],
-        'Status': ['✓ Complete', '✓ Complete', '✓ Complete', '✓ Complete', '✓ Complete'],
-        'Records': ['125+', '5', '5', '5', '5']
-    })
-    st.dataframe(spark_transforms, use_container_width=True, hide_index=True)
+        fig_stats = go.Figure()
+        for _, row in price_stats.iterrows():
+            coin = row['coin_id'].upper()
+            fig_stats.add_trace(go.Scatter(
+                x=['Min', 'Avg', 'Max'],
+                y=[row['min_price'], row['avg_price'], row['max_price']],
+                mode='lines+markers',
+                name=coin,
+                line=dict(width=3)
+            ))
+        fig_stats.update_layout(**LAY, height=300, title=dict(text="Price Range & Averages (Spark SQL)", font=dict(size=14, color="#003d7a")))
+        st.plotly_chart(fig_stats, use_container_width=True)
 
 st.markdown("<hr style='border-color:#d0e4f7;margin-top:40px'><p style='text-align:center;color:#A1C4DF;font-size:0.75rem'>Crypto Data Pipeline — Python · PostgreSQL · Kafka · PySpark · Streamlit · Plotly</p>", unsafe_allow_html=True)

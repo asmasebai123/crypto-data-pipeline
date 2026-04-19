@@ -52,10 +52,15 @@ section[data-testid="stSidebar"] h3 {
     font-weight: 800 !important;
 }
 
-section[data-testid="stSidebar"] label {
-    color: #0a1929 !important;
+section[data-testid="stSidebar"] .stMultiSelect label,
+section[data-testid="stSidebar"] .stSelectbox label,
+section[data-testid="stSidebar"] .stSlider label,
+section[data-testid="stSidebar"] .stToggle label {
+    color: #000000 !important;
     font-weight: 900 !important;
-    font-size: 1.1rem !important;
+    font-size: 1.25rem !important;
+    display: block !important;
+    margin-bottom: 12px !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
@@ -74,10 +79,10 @@ section[data-testid="stSidebar"] .stMultiSelect [data-testid="stMultiSelectInput
     background: linear-gradient(135deg, var(--cyan), var(--violet)) !important;
 }
 
-h1 { color: var(--cyan) !important; font-size: 2.4rem !important; font-weight: 800 !important; text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-h2 { color: var(--cyan) !important; font-size: 1.8rem !important; font-weight: 700 !important; }
-h3 { color: var(--violet) !important; font-size: 1.3rem !important; font-weight: 600 !important; }
-p, li, span, label { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
+h1 { color: #06B6D4 !important; font-size: 2.4rem !important; font-weight: 800 !important; }
+h2 { color: #1a2942 !important; font-size: 1.8rem !important; font-weight: 700 !important; }
+h3 { color: #06B6D4 !important; font-size: 1.3rem !important; font-weight: 600 !important; }
+p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%) !important;

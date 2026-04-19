@@ -44,8 +44,8 @@ code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 }
 
 section[data-testid="stSidebar"] {
-    background: var(--card) !important;
-    border-right: 1px solid var(--border) !important;
+    background: #b2d5f7 !important;
+    border-right: 1px solid #9AC8F0 !important;
 }
 
 section[data-testid="stSidebar"] h3 {

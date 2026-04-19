@@ -35,8 +35,8 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif !important; fo
 code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 
 .stApp {
-    background: linear-gradient(135deg, #f5f8fc 0%, #f0f5fa 50%, #f8fafb 100%) !important;
-    color: var(--text-primary);
+    background: linear-gradient(135deg, #0f1b2e 0%, #1a2d42 50%, #132840 100%) !important;
+    color: #c0d0e0;
     background-attachment: fixed;
 }
 
@@ -84,13 +84,13 @@ h3 { color: #003d7a !important; font-size: 1.3rem !important; font-weight: 600 !
 p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%) !important;
+    background: linear-gradient(135deg, #1a3a52 0%, #254565 100%) !important;
     backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(0, 61, 122,0.5) !important;
+    border: 2px solid #FF6B6B !important;
     border-radius: 16px !important;
     padding: 28px 24px !important;
     margin-bottom: 20px;
-    box-shadow: 0 8px 32px rgba(0, 61, 122,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -120,11 +120,11 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
     box-shadow: 0 16px 48px rgba(0, 61, 122,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-.kpi-label { color: #003d7a; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 900; }
-.kpi-value { color: #003d7a; font-size: 2.4rem; font-weight: 900; margin-bottom: 8px; }
-.kpi-up { color: #10B981; font-size: 0.95rem; font-weight: 700; }
-.kpi-down { color: #EF4444; font-size: 0.95rem; font-weight: 700; }
-.kpi-flat { color: var(--text-secondary); font-size: 0.95rem; }
+.kpi-label { color: #c0d0e0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 600; }
+.kpi-value { color: #FF6B6B; font-size: 2.4rem; font-weight: 900; margin-bottom: 8px; }
+.kpi-up { color: #4ADE80; font-size: 0.95rem; font-weight: 700; }
+.kpi-down { color: #FF6B6B; font-size: 0.95rem; font-weight: 700; }
+.kpi-flat { color: #c0d0e0; font-size: 0.95rem; }
 
 .sec-title {
     color: #003d7a;
@@ -335,26 +335,45 @@ LAY = dict(
 )
 
 with st.sidebar:
-    st.markdown("<h3 style='color:#ffffff;text-align:center;margin-bottom:20px;font-size:1.2rem;font-weight:700'>Crypto Dashboard</h3>", unsafe_allow_html=True)
+    # Header
+    st.markdown("""
+    <div style='text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid rgba(255,107,107,0.3)'>
+        <h3 style='color:#ffffff;margin:0;font-size:1.4rem;font-weight:800;letter-spacing:0.5px'>Crypto Dashboard</h3>
+        <p style='color:#8090a0;margin:8px 0 0 0;font-size:0.8rem;font-weight:500'>Real-time Analytics</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px'>Cryptocurrencies</div>", unsafe_allow_html=True)
+    # Cryptocurrencies Section
+    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Cryptocurrencies</div>", unsafe_allow_html=True)
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
     selected = st.multiselect("", all_coins, default=all_coins, label_visibility="collapsed")
 
-    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Time Period</div>", unsafe_allow_html=True)
+    # Time Period Section
+    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Time Period</div>", unsafe_allow_html=True)
     periode = st.selectbox("", ["Last Hour", "Last 6 Hours", "Last 24 Hours", "Last 7 Days", "Full History"], index=2, label_visibility="collapsed")
 
-    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Alert Threshold (%)</div>", unsafe_allow_html=True)
+    # Alert Threshold Section
+    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Alert Threshold (%)</div>", unsafe_allow_html=True)
     seuil = st.slider("", 1, 20, 5, label_visibility="collapsed")
 
-    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Auto-Refresh 60s</div>", unsafe_allow_html=True)
+    # Settings Section
+    st.markdown("<div style='margin-top:24px;padding-top:16px;border-top:2px solid rgba(255,107,107,0.3)'></div>", unsafe_allow_html=True)
+
+    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.9rem;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between'><span>Auto-Refresh (60s)</span></div>", unsafe_allow_html=True)
     auto_ref = st.toggle("", value=False, label_visibility="collapsed")
 
+    # Refresh Button
     if st.button("Rafraichir", use_container_width=True, key="refresh_btn"):
         st.cache_data.clear()
         st.rerun()
 
-    st.markdown(f"<p style='color:#8090a0;font-size:0.8rem;margin-top:16px;text-align:center;font-weight:500'>Mis à jour: {datetime.now().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
+    # Footer
+    st.markdown(f"""
+    <div style='margin-top:24px;padding-top:16px;border-top:2px solid rgba(255,107,107,0.2);text-align:center'>
+        <p style='color:#8090a0;font-size:0.75rem;margin:0;font-weight:500'>Mis à jour</p>
+        <p style='color:#FF6B6B;font-size:0.85rem;margin:4px 0 0 0;font-weight:700;letter-spacing:0.5px'>{datetime.now().strftime('%H:%M:%S')}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 if auto_ref:
     time.sleep(60)

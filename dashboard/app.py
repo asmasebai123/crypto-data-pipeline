@@ -336,23 +336,28 @@ LAY = dict(
 )
 
 with st.sidebar:
-    st.markdown("<h3 style='color:#003d7a;text-align:center;margin-bottom:16px'>Crypto Dashboard</h3>", unsafe_allow_html=True)
-    st.markdown("<hr style='border-color:rgba(0, 61, 122,0.3);margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#ffffff;text-align:center;margin-bottom:16px;font-size:1.3rem;font-weight:900'>Crypto Dashboard</h3>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:rgba(255,255,255,0.3);margin:8px 0'>", unsafe_allow_html=True)
 
+    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px'>Cryptocurrencies</div>", unsafe_allow_html=True)
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
-    selected = st.multiselect("Cryptocurrencies", all_coins, default=all_coins)
+    selected = st.multiselect("", all_coins, default=all_coins, label_visibility="collapsed")
 
-    periode = st.selectbox("Time Period", ["Last Hour", "Last 6 Hours", "Last 24 Hours", "Last 7 Days", "Full History"], index=2)
+    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px;margin-top:16px'>Time Period</div>", unsafe_allow_html=True)
+    periode = st.selectbox("", ["Last Hour", "Last 6 Hours", "Last 24 Hours", "Last 7 Days", "Full History"], index=2, label_visibility="collapsed")
 
-    seuil = st.slider("Alert Threshold (%)", 1, 20, 5)
+    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px;margin-top:16px'>Alert Threshold (%)</div>", unsafe_allow_html=True)
+    seuil = st.slider("", 1, 20, 5, label_visibility="collapsed")
 
-    st.markdown("<hr style='border-color:rgba(0, 61, 122,0.3);margin:8px 0'>", unsafe_allow_html=True)
-    auto_ref = st.toggle("Auto-Refresh (60s)", value=False)
-    if st.button("REFRESH", use_container_width=True):
+    st.markdown("<hr style='border-color:rgba(255,255,255,0.3);margin:16px 0'>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px'>Auto-Refresh (60s)</div>", unsafe_allow_html=True)
+    auto_ref = st.toggle("", value=False, label_visibility="collapsed")
+
+    if st.button("REFRESH", use_container_width=True, key="refresh_btn"):
         st.cache_data.clear()
         st.rerun()
 
-    st.markdown(f"<p style='color:#4a6fa5;font-size:0.73rem;margin-top:12px;text-align:center'>Updated: {datetime.now().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#ffffff;font-size:0.85rem;margin-top:16px;text-align:center;font-weight:700'>Updated: {datetime.now().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
 
 if auto_ref:
     time.sleep(60)
@@ -419,22 +424,23 @@ with tab1:
             st.info("No data available yet.")
 
     with c2:
-        st.markdown("<div class='sec-title'>Rankings</div>", unsafe_allow_html=True)
-        if not ranking_df.empty:
-            today = str(datetime.now().date())
-            td = ranking_df[ranking_df["day"].astype(str) == today]
-            if td.empty:
-                td = ranking_df.sort_values("rank").head(5)
-            if not td.empty:
-                for _, r in td.head(5).iterrows():
+        st.markdown("<div class='sec-title'>Top Assets</div>", unsafe_allow_html=True)
+        if not raw_df.empty:
+            # Create rankings from current data
+            latest_prices = raw_df.sort_values("fetched_at").groupby("coin_id").last().reset_index()
+            latest_prices = latest_prices.sort_values("current_price", ascending=False).reset_index(drop=True)
+            latest_prices["rank"] = range(1, len(latest_prices) + 1)
+
+            if not latest_prices.empty:
+                for idx, (_, r) in enumerate(latest_prices.head(5).iterrows(), 1):
                     chg = r.get("price_change_pct_24h", 0) or 0
                     color = "#10B981" if chg >= 0 else "#EF4444"
-                    bc = COLORS.get(r["coin_id"], "#06B6D4")
-                    st.markdown(f"<div class='rank-row'><span><span class='rank-num'>#{int(r['rank'])}</span><span class='rank-name'>{r['coin_id'].upper()}</span></span><span><span class='rank-price'>${r['current_price']:,.0f}</span><b style='color:{color}'>{chg:+.2f}%</b></span></div>", unsafe_allow_html=True)
+                    name = r.get("name", r["coin_id"]).upper()
+                    st.markdown(f"<div class='rank-row'><span><span class='rank-num'>#{idx}</span><span class='rank-name'>{name}</span></span><span><span class='rank-price'>${r['current_price']:,.0f}</span><b style='color:{color}'>{chg:+.2f}%</b></span></div>", unsafe_allow_html=True)
             else:
                 st.info("No ranking data available")
         else:
-            st.info("No ranking data available")
+            st.info("No data available")
 
 with tab2:
     st.markdown("<div class='sec-title'>Technical Analysis</div>", unsafe_allow_html=True)

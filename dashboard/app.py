@@ -35,8 +35,8 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif !important; fo
 code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 
 .stApp {
-    background: linear-gradient(135deg, #0f1b2e 0%, #1a2d42 50%, #132840 100%) !important;
-    color: #c0d0e0;
+    background: #ffffff !important;
+    color: #1a2942;
     background-attachment: fixed;
 }
 
@@ -103,7 +103,7 @@ section[data-testid="stSidebar"] .stToggle [role="switch"] {
 h1 { color: #003d7a !important; font-size: 2.4rem !important; font-weight: 900 !important; }
 h2 { color: #003d7a !important; font-size: 1.8rem !important; font-weight: 700 !important; }
 h3 { color: #003d7a !important; font-size: 1.3rem !important; font-weight: 600 !important; }
-p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
+p, li, span { color: #4a6fa5 !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
     background: linear-gradient(135deg, #1a3a52 0%, #254565 100%) !important;
@@ -310,22 +310,22 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 .stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label { color: var(--text-primary) !important; font-size: 0.85rem !important; font-weight: 700 !important; }
 
 .stButton > button {
-    background: linear-gradient(135deg, #2A7EBF 0%, #1E5BA8 100%) !important;
+    background: linear-gradient(135deg, #003d7a 0%, #002d5a 100%) !important;
     color: #ffffff !important;
-    border: 2px solid #2A7EBF !important;
-    border-radius: 8px !important;
+    border: 2px solid #003d7a !important;
+    border-radius: 12px !important;
     font-weight: 900 !important;
     font-size: 1.1rem !important;
     padding: 14px 28px !important;
-    box-shadow: 0 4px 16px rgba(42, 126, 191, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(0, 61, 122, 0.4) !important;
     transition: all 0.3s ease !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
 }
 .stButton > button:hover {
     transform: translateY(-2px);
-    background: linear-gradient(135deg, #3A8ED9 0%, #2A7EBF 100%) !important;
-    box-shadow: 0 8px 24px rgba(42, 126, 191, 0.6) !important;
+    background: linear-gradient(135deg, #004a9e 0%, #003d7a 100%) !important;
+    box-shadow: 0 8px 24px rgba(0, 61, 122, 0.6) !important;
     color: #ffffff !important;
 }
 

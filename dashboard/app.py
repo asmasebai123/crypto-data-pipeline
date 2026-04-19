@@ -41,14 +41,13 @@ code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 }
 
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #3a6ba5 0%, #4a7fbf 100%) !important;
-    border-right: 2px solid rgba(0, 61, 122,0.7) !important;
+    background: linear-gradient(180deg, #1a3a52 0%, #254565 100%) !important;
+    border-right: 2px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 section[data-testid="stSidebar"] h3 {
     color: #ffffff !important;
-    font-size: 1.2rem !important;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    font-size: 1.3rem !important;
     font-weight: 800 !important;
 }
 
@@ -56,15 +55,15 @@ section[data-testid="stSidebar"] .stMultiSelect label,
 section[data-testid="stSidebar"] .stSelectbox label,
 section[data-testid="stSidebar"] .stSlider label,
 section[data-testid="stSidebar"] .stToggle label {
-    color: #000000 !important;
-    font-weight: 900 !important;
-    font-size: 1.25rem !important;
+    color: #c0d0e0 !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
     display: block !important;
     margin-bottom: 12px !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-    background-color: #06B6D4 !important;
+    background-color: #FF6B6B !important;
     color: white !important;
     font-weight: 700 !important;
 }
@@ -289,20 +288,20 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 .stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label { color: var(--text-primary) !important; font-size: 0.85rem !important; font-weight: 700 !important; }
 
 .stButton > button {
-    background: linear-gradient(135deg, #003d7a 0%, #004a94 100%) !important;
+    background: linear-gradient(135deg, #2A7EBF 0%, #1E5BA8 100%) !important;
     color: white !important;
-    border: 2px solid #003d7a !important;
-    border-radius: 10px !important;
-    font-weight: 900 !important;
-    font-size: 1.15rem !important;
-    padding: 18px 32px !important;
-    box-shadow: 0 0 30px rgba(0, 61, 122, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    border: 2px solid #2A7EBF !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 4px 16px rgba(42, 126, 191, 0.4) !important;
     transition: all 0.3s ease !important;
 }
 .stButton > button:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, #004a94 0%, #003d7a 100%) !important;
-    box-shadow: 0 12px 40px rgba(0, 61, 122, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #3A8ED9 0%, #2A7EBF 100%) !important;
+    box-shadow: 0 8px 24px rgba(42, 126, 191, 0.6) !important;
 }
 
 .stAlert { border-radius: 12px !important; border: 1px solid !important; backdrop-filter: blur(8px); }
@@ -336,28 +335,26 @@ LAY = dict(
 )
 
 with st.sidebar:
-    st.markdown("<h3 style='color:#ffffff;text-align:center;margin-bottom:16px;font-size:1.3rem;font-weight:900'>Crypto Dashboard</h3>", unsafe_allow_html=True)
-    st.markdown("<hr style='border-color:rgba(255,255,255,0.3);margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#ffffff;text-align:center;margin-bottom:20px;font-size:1.2rem;font-weight:700'>Crypto Dashboard</h3>", unsafe_allow_html=True)
 
-    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px'>Cryptocurrencies</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px'>Cryptocurrencies</div>", unsafe_allow_html=True)
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
     selected = st.multiselect("", all_coins, default=all_coins, label_visibility="collapsed")
 
-    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px;margin-top:16px'>Time Period</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Time Period</div>", unsafe_allow_html=True)
     periode = st.selectbox("", ["Last Hour", "Last 6 Hours", "Last 24 Hours", "Last 7 Days", "Full History"], index=2, label_visibility="collapsed")
 
-    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px;margin-top:16px'>Alert Threshold (%)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Alert Threshold (%)</div>", unsafe_allow_html=True)
     seuil = st.slider("", 1, 20, 5, label_visibility="collapsed")
 
-    st.markdown("<hr style='border-color:rgba(255,255,255,0.3);margin:16px 0'>", unsafe_allow_html=True)
-    st.markdown("<div style='color:#000000;font-weight:900;font-size:1.25rem;display:block;margin-bottom:12px'>Auto-Refresh (60s)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.95rem;display:block;margin-bottom:8px;margin-top:16px'>Auto-Refresh 60s</div>", unsafe_allow_html=True)
     auto_ref = st.toggle("", value=False, label_visibility="collapsed")
 
-    if st.button("REFRESH", use_container_width=True, key="refresh_btn"):
+    if st.button("Rafraichir", use_container_width=True, key="refresh_btn"):
         st.cache_data.clear()
         st.rerun()
 
-    st.markdown(f"<p style='color:#ffffff;font-size:0.85rem;margin-top:16px;text-align:center;font-weight:700'>Updated: {datetime.now().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#8090a0;font-size:0.8rem;margin-top:16px;text-align:center;font-weight:500'>Mis à jour: {datetime.now().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
 
 if auto_ref:
     time.sleep(60)

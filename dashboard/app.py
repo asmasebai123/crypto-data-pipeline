@@ -63,9 +63,11 @@ section[data-testid="stSidebar"] .stToggle label {
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-    background-color: #FF6B6B !important;
-    color: white !important;
-    font-weight: 700 !important;
+    background-color: #003d7a !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect,
@@ -76,10 +78,6 @@ section[data-testid="stSidebar"] .stSelectbox {
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1) !important;
 }
 
-section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
-section[data-testid="stSidebar"] .stMultiSelect [data-testid="stMultiSelectInput"] {
-    background: linear-gradient(135deg, var(--cyan), var(--violet)) !important;
-}
 
 section[data-testid="stSidebar"] .stMultiSelect:hover,
 section[data-testid="stSidebar"] .stSelectbox:hover {

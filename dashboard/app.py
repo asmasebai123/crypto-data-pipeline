@@ -16,202 +16,205 @@ st.set_page_config(
     initial_sidebar_state="collapsed",  # Sidebar minimale
 )
 
-# ── CSS DESIGN ORIGINAL ───────────────────────────────────────────────────────
+# ── CSS DESIGN MODERNE (Style Finpay) ────────────────────────────────────────
 st.markdown("""
 <style>
-/* PALETTE PERSONNALISÉE */
+/* PALETTE MODERNE & CLEAN */
 :root {
-    --primary: #a97070;      /* Rose poudré */
-    --secondary: #f5ede0;    /* Beige clair */
-    --accent: #5c484d;       /* Marron profond */
-    --gold: #c9b8a8;         /* Doré chaud */
-    --gray: #9a9191;         /* Gris doux */
+    --primary: #20c997;      /* Teal moderne */
+    --secondary: #f8f9fa;    /* Gris très clair */
+    --accent: #2c3e50;       /* Gris foncé */
+    --white: #ffffff;
+    --border: #e9ecef;
+    --success: #10b981;
+    --danger: #ef4444;
 }
 
-/* Fond élégant */
+/* Fond blanc & clean */
 .stApp {
-    background: linear-gradient(135deg, #f5ede0 0%, #f9f5f0 100%);
-    color: #5c484d;
+    background: #ffffff;
+    color: #2c3e50;
 }
 
-/* Sidebar minimale et élégante */
+/* Sidebar propre */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #5c484d 0%, #6d5a63 100%);
-    border-right: none;
+    background: #f8f9fa;
+    border-right: 1px solid #e9ecef;
 }
 
-/* Titres élégants */
-h1, h2 { color: #5c484d !important; font-weight: 600; letter-spacing: 1px; }
-h3, h4 { color: #a97070 !important; font-weight: 500; }
-p, li, span, label { color: #6d5a63; font-size: 14px; }
+/* Titres propres */
+h1, h2 { color: #2c3e50 !important; font-weight: 700; letter-spacing: 0px; }
+h3, h4 { color: #20c997 !important; font-weight: 600; }
+p, li, span, label { color: #555555; font-size: 14px; line-height: 1.6; }
 
-/* ── KPI cards (Design moderne) ── */
+/* ── KPI cards (MODERNE) ── */
 .kpi-card {
-    background: white;
-    border: 2px solid #c9b8a8;
-    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
     padding: 20px;
     text-align: center;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 12px rgba(169, 112, 112, 0.08);
-    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border-top: 3px solid #20c997;
 }
 .kpi-card:hover {
-    box-shadow: 0 8px 24px rgba(169, 112, 112, 0.15);
-    border-color: #a97070;
+    box-shadow: 0 4px 12px rgba(32, 201, 151, 0.1);
 }
 .kpi-label {
-    color: #9a9191;
-    font-size: 0.7rem;
+    color: #888888;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: 0.5px;
     margin-bottom: 8px;
     font-weight: 600;
 }
 .kpi-value {
-    color: #5c484d;
+    color: #2c3e50;
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 6px;
 }
-.kpi-up   { color: #a97070; font-size: 0.9rem; font-weight: 600; }
-.kpi-down { color: #c9b8a8; font-size: 0.9rem; font-weight: 600; }
-.kpi-flat { color: #9a9191; font-size: 0.9rem; }
+.kpi-up   { color: #10b981; font-size: 0.9rem; font-weight: 600; }
+.kpi-down { color: #ef4444; font-size: 0.9rem; font-weight: 600; }
+.kpi-flat { color: #888888; font-size: 0.9rem; }
 
-/* ── Section header (Élégant) ── */
+/* ── Section header ── */
 .sec-title {
-    color: #5c484d;
+    color: #2c3e50;
     font-size: 1.1rem;
     font-weight: 700;
-    border-left: 4px solid #a97070;
+    border-left: 3px solid #20c997;
     padding-left: 12px;
-    margin: 20px 0 15px 0;
-    letter-spacing: 0.5px;
+    margin: 24px 0 16px 0;
+    letter-spacing: 0px;
 }
 
-/* ── Alert boxes (Soft & Elegant) ── */
+/* ── Alert boxes ── */
 .alert-up {
-    background: #faf7f4;
-    border: 2px solid #a97070;
-    border-radius: 10px;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    border-radius: 6px;
     padding: 12px 16px;
     margin: 8px 0;
-    color: #a97070;
+    color: #059669;
     font-size: 0.9rem;
     font-weight: 600;
 }
 .alert-down {
-    background: #faf7f4;
-    border: 2px solid #c9b8a8;
-    border-radius: 10px;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 6px;
     padding: 12px 16px;
     margin: 8px 0;
-    color: #9a9191;
+    color: #dc2626;
     font-size: 0.9rem;
     font-weight: 600;
 }
 .alert-ok {
-    background: #faf7f4;
-    border: 2px solid #a97070;
-    border-radius: 10px;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    border-radius: 6px;
     padding: 12px 16px;
-    color: #a97070;
+    color: #059669;
     font-size: 0.9rem;
     font-weight: 600;
 }
 
-/* ── Rank row (Modern) ── */
+/* ── Rank row ── */
 .rank-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 6px;
     padding: 12px 16px;
-    margin: 6px 0;
-    border-left: 4px solid #a97070;
-    box-shadow: 0 2px 8px rgba(169, 112, 112, 0.06);
+    margin: 8px 0;
+    border: 1px solid #e9ecef;
+    border-left: 3px solid #20c997;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
-.rank-num { color: white; font-size: 0.85rem; font-weight: 700; background: #a97070; border-radius: 6px; padding: 4px 10px; }
-.rank-name { color: #5c484d; font-weight: 600; margin-left: 12px; }
-.rank-price { color: #9a9191; font-size: 0.85rem; }
+.rank-num { color: white; font-size: 0.85rem; font-weight: 700; background: #20c997; border-radius: 4px; padding: 4px 10px; }
+.rank-name { color: #2c3e50; font-weight: 600; margin-left: 12px; }
+.rank-price { color: #888888; font-size: 0.85rem; }
 
-/* ── Spark badge (Elegant) ── */
+/* ── Badge ── */
 .spark-badge {
-    background: linear-gradient(90deg, #a97070, #c9b8a8);
+    background: #20c997;
     color: white;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 6px 14px;
     font-size: 0.8rem;
     font-weight: 700;
     display: inline-block;
     margin-bottom: 10px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0px;
 }
 .spark-note {
-    background: white;
-    border: 2px solid #c9b8a8;
-    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
     padding: 14px 16px;
-    color: #6d5a63;
+    color: #555555;
     font-size: 0.85rem;
     margin-bottom: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
-/* ── Tabs (Modern & Clean) ── */
+/* ── Tabs (Moderne) ── */
 .stTabs [data-baseweb="tab-list"] {
     background: transparent;
-    border-bottom: 2px solid #c9b8a8;
-    gap: 8px;
+    border-bottom: 2px solid #e9ecef;
+    gap: 0px;
 }
 .stTabs [data-baseweb="tab"] {
-    color: #9a9191;
+    color: #888888;
     border-radius: 0;
-    padding: 10px 20px;
-    font-size: 0.9rem;
+    padding: 12px 20px;
+    font-size: 0.95rem;
     font-weight: 600;
     border-bottom: 3px solid transparent;
 }
 .stTabs [aria-selected="true"] {
     background: transparent !important;
-    color: #a97070 !important;
-    border-bottom: 3px solid #a97070 !important;
-    font-weight: 700 !important;
+    color: #20c997 !important;
+    border-bottom: 3px solid #20c997 !important;
 }
 
 /* ── Dataframes ── */
 .stDataFrame {
-    border: 2px solid #c9b8a8 !important;
-    border-radius: 10px !important;
-    background: white !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
 }
 
-/* ── Sidebar labels (Elegant) ── */
+/* ── Sidebar controls ── */
 .stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label {
-    color: #f5ede0 !important;
+    color: #2c3e50 !important;
     font-size: 0.85rem !important;
     font-weight: 600 !important;
 }
 
-/* ── Main title (Hero) ── */
-h1 {
-    color: #5c484d !important;
-    letter-spacing: 2px !important;
-    margin-bottom: 10px !important;
-}
-
 /* ── Buttons ── */
 .stButton > button {
-    background: linear-gradient(90deg, #a97070, #c9b8a8) !important;
+    background: #20c997 !important;
     color: white !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     font-weight: 600 !important;
     padding: 10px 20px !important;
+    transition: all 0.2s ease !important;
 }
 .stButton > button:hover {
-    box-shadow: 0 4px 12px rgba(169, 112, 112, 0.3) !important;
+    background: #1aa179 !important;
+    box-shadow: 0 4px 12px rgba(32, 201, 151, 0.2) !important;
+}
+
+/* ── Info/Warning boxes ── */
+.stAlert {
+    border-radius: 6px !important;
+    border: 1px solid !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -232,16 +235,16 @@ def load(query: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 COLORS = {
-    "bitcoin": "#a97070", "ethereum": "#c9b8a8",
-    "solana": "#9a9191",  "ripple": "#6d5a63", "binancecoin": "#d4c4b8",
+    "bitcoin": "#20c997", "ethereum": "#0ea5e9",
+    "solana": "#f59e0b",  "ripple": "#8b5cf6", "binancecoin": "#ec4899",
 }
 LAY = dict(
-    plot_bgcolor="#f5ede0", paper_bgcolor="#f5ede0",
-    font=dict(color="#5c484d", size=12),
-    xaxis=dict(gridcolor="#ddd4ca", zeroline=False, color="#9a9191"),
-    yaxis=dict(gridcolor="#ddd4ca", zeroline=False, color="#9a9191"),
-    legend=dict(bgcolor="white", bordercolor="#c9b8a8", borderwidth=2,
-                font=dict(color="#5c484d")),
+    plot_bgcolor="#ffffff", paper_bgcolor="#ffffff",
+    font=dict(color="#2c3e50", size=12, family="sans-serif"),
+    xaxis=dict(gridcolor="#e9ecef", zeroline=False, showgrid=True),
+    yaxis=dict(gridcolor="#e9ecef", zeroline=False, showgrid=True),
+    legend=dict(bgcolor="rgba(255,255,255,0.95)", bordercolor="#e9ecef", borderwidth=1,
+                font=dict(color="#2c3e50")),
     margin=dict(l=10, r=10, t=40, b=10),
     hovermode="x unified",
 )
@@ -249,7 +252,7 @@ LAY = dict(
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### ₿ Crypto Dashboard")
-    st.markdown("<hr style='border-color:#2a3548;margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:#e9ecef;margin:8px 0'>", unsafe_allow_html=True)
 
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
     selected = st.multiselect("Cryptomonnaies", all_coins, default=all_coins)
@@ -260,14 +263,14 @@ with st.sidebar:
 
     seuil = st.slider("Seuil alerte (%)", 1, 20, 5)
 
-    st.markdown("<hr style='border-color:#2a3548;margin:8px 0'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:#e9ecef;margin:8px 0'>", unsafe_allow_html=True)
     auto_ref = st.toggle("Auto-refresh 60s", value=False)
     if st.button("🔄 Rafraîchir", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
 
     st.markdown(
-        f"<p style='color:#607080;font-size:0.73rem;margin-top:6px'>"
+        f"<p style='color:#888888;font-size:0.73rem;margin-top:6px'>"
         f"Mis à jour : {datetime.now().strftime('%H:%M:%S')}</p>",
         unsafe_allow_html=True)
 
@@ -334,9 +337,9 @@ dom_df = load(f"""
 
 # ── HEADER ────────────────────────────────────────────────────────────────────
 st.markdown(
-    "<h2 style='margin-bottom:2px'>₿ Crypto Data Pipeline — Dashboard</h2>"
-    f"<p style='color:#90a4c0;font-size:0.85rem;margin-top:0'>"
-    f"Données quasi temps-réel · <b style='color:#c8d8f0'>{periode}</b> · "
+    "<h2 style='margin-bottom:2px'>₿ Crypto Data Pipeline</h2>"
+    f"<p style='color:#888888;font-size:0.85rem;margin-top:0'>"
+    f"Données temps-réel · <b style='color:#20c997'>{periode}</b> · "
     f"{len(selected)} crypto(s)</p>",
     unsafe_allow_html=True)
 
@@ -359,7 +362,7 @@ if not raw_df.empty:
 else:
     st.warning("Aucune donnée — lance d'abord le pipeline.")
 
-st.markdown("<hr style='border-color:#2a3548;margin:10px 0 16px'>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#e9ecef;margin:10px 0 16px'>", unsafe_allow_html=True)
 
 # ══ ONGLETS ═══════════════════════════════════════════════════════════════════
 tab1, tab2, tab3, tab4, tab5 = st.tabs([

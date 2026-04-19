@@ -63,7 +63,7 @@ section[data-testid="stSidebar"] .stToggle label {
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-    background-color: #FF6B6B !important;
+    background-color: #1E5BA8 !important;
     color: #ffffff !important;
     font-weight: 900 !important;
     font-size: 1rem !important;

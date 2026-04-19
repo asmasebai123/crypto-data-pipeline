@@ -64,11 +64,20 @@ section[data-testid="stSidebar"] .stToggle label {
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
     background-color: #1E5BA8 !important;
-    color: #ffffff !important;
+    color: white !important;
     font-weight: 900 !important;
     font-size: 1rem !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
     padding: 8px 12px !important;
+}
+
+section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] span {
+    color: white !important;
+    font-weight: 900 !important;
+}
+
+section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] * {
+    color: white !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect,

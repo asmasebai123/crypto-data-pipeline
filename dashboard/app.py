@@ -63,11 +63,12 @@ section[data-testid="stSidebar"] .stToggle label {
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-    background-color: #003d7a !important;
+    background-color: #FF6B6B !important;
     color: #ffffff !important;
-    font-weight: 800 !important;
-    font-size: 0.95rem !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    font-weight: 900 !important;
+    font-size: 1rem !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+    padding: 8px 12px !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect,

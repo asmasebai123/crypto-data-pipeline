@@ -71,11 +71,33 @@ section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
 section[data-testid="stSidebar"] .stMultiSelect,
 section[data-testid="stSidebar"] .stSelectbox {
     background-color: rgba(255, 255, 255, 0.98) !important;
+    border-radius: 14px !important;
+    border: 1.5px solid rgba(255, 107, 107, 0.25) !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1) !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
 section[data-testid="stSidebar"] .stMultiSelect [data-testid="stMultiSelectInput"] {
     background: linear-gradient(135deg, var(--cyan), var(--violet)) !important;
+}
+
+section[data-testid="stSidebar"] .stMultiSelect:hover,
+section[data-testid="stSidebar"] .stSelectbox:hover {
+    border-color: rgba(255, 107, 107, 0.5) !important;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.15) !important;
+}
+
+section[data-testid="stSidebar"] [data-baseweb="input"],
+section[data-testid="stSidebar"] [data-baseweb="select"] {
+    border-radius: 12px !important;
+}
+
+section[data-testid="stSidebar"] .stSlider [role="slider"] {
+    border-radius: 8px !important;
+}
+
+section[data-testid="stSidebar"] .stToggle [role="switch"] {
+    border-radius: 20px !important;
 }
 
 h1 { color: #003d7a !important; font-size: 2.4rem !important; font-weight: 900 !important; }
@@ -289,19 +311,22 @@ p, li, span { color: var(--text-secondary) !important; font-size: 14px !importan
 
 .stButton > button {
     background: linear-gradient(135deg, #2A7EBF 0%, #1E5BA8 100%) !important;
-    color: white !important;
+    color: #ffffff !important;
     border: 2px solid #2A7EBF !important;
     border-radius: 8px !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
-    padding: 12px 24px !important;
+    font-weight: 900 !important;
+    font-size: 1.1rem !important;
+    padding: 14px 28px !important;
     box-shadow: 0 4px 16px rgba(42, 126, 191, 0.4) !important;
     transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
 }
 .stButton > button:hover {
     transform: translateY(-2px);
     background: linear-gradient(135deg, #3A8ED9 0%, #2A7EBF 100%) !important;
     box-shadow: 0 8px 24px rgba(42, 126, 191, 0.6) !important;
+    color: #ffffff !important;
 }
 
 .stAlert { border-radius: 12px !important; border: 1px solid !important; backdrop-filter: blur(8px); }

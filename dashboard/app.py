@@ -12,68 +12,73 @@ from sqlalchemy import create_engine
 st.set_page_config(page_title="Crypto Pipeline Dashboard", page_icon="₿", layout="wide", initial_sidebar_state="collapsed")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# MODERN IMPACTFUL DESIGN: CYAN + VIOLET NEON ON CLEAR DARK
+# MODERN CLEAN LIGHT-MODE DESIGN (Stripe/Linear inspired)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --cyan: #003d7a;
-    --violet: #A78BFA;
-    --dark-bg: #f5f8fc;
-    --dark-card: #ffffff;
-    --dark-input: #fafbfd;
-    --text-primary: #1a2942;
-    --text-secondary: #4a6fa5;
-    --border: #d0e4f7;
+    --primary: #2563EB;
+    --primary-light: #3B82F6;
+    --secondary: #0EA5E9;
+    --success: #16A34A;
+    --danger: #DC2626;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
 }
 
-* { font-family: 'Space Grotesk', sans-serif !important; }
-h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif !important; font-weight: 700 !important; letter-spacing: 0.5px !important; }
+* { font-family: 'Inter', sans-serif !important; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
 code, .code-block { font-family: 'JetBrains Mono', monospace !important; }
 
 .stApp {
-    background: #ffffff !important;
-    color: #1a2942;
+    background: var(--bg) !important;
+    color: var(--text-primary);
     background-attachment: fixed;
 }
 
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #1a3a52 0%, #254565 100%) !important;
-    border-right: 2px solid rgba(255, 255, 255, 0.1) !important;
+    background: var(--card) !important;
+    border-right: 1px solid var(--border) !important;
 }
 
 section[data-testid="stSidebar"] h3 {
-    color: #ffffff !important;
+    color: var(--text-primary) !important;
     font-size: 1.3rem !important;
-    font-weight: 800 !important;
+    font-weight: 700 !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect label,
 section[data-testid="stSidebar"] .stSelectbox label,
 section[data-testid="stSidebar"] .stSlider label,
 section[data-testid="stSidebar"] .stToggle label {
-    color: #c0d0e0 !important;
+    color: var(--text-secondary) !important;
     font-weight: 600 !important;
-    font-size: 0.95rem !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
     display: block !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-    background-color: #1E5BA8 !important;
+    background-color: var(--primary) !important;
     color: white !important;
-    font-weight: 900 !important;
-    font-size: 1rem !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
-    padding: 8px 12px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] span {
     color: white !important;
-    font-weight: 900 !important;
+    font-weight: 700 !important;
 }
 
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] * {
@@ -82,262 +87,219 @@ section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] * {
 
 section[data-testid="stSidebar"] .stMultiSelect,
 section[data-testid="stSidebar"] .stSelectbox {
-    background-color: rgba(255, 255, 255, 0.98) !important;
-    border-radius: 14px !important;
-    border: 1.5px solid rgba(255, 107, 107, 0.25) !important;
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1) !important;
+    background-color: var(--card) !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
 }
-
 
 section[data-testid="stSidebar"] .stMultiSelect:hover,
 section[data-testid="stSidebar"] .stSelectbox:hover {
-    border-color: rgba(255, 107, 107, 0.5) !important;
-    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.15) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1) !important;
 }
 
 section[data-testid="stSidebar"] [data-baseweb="input"],
 section[data-testid="stSidebar"] [data-baseweb="select"] {
-    border-radius: 12px !important;
-}
-
-section[data-testid="stSidebar"] .stSlider [role="slider"] {
     border-radius: 8px !important;
 }
 
-section[data-testid="stSidebar"] .stToggle [role="switch"] {
-    border-radius: 20px !important;
+section[data-testid="stSidebar"] .stSlider [role="slider"] {
+    border-radius: 4px !important;
 }
 
-h1 { color: #003d7a !important; font-size: 2.4rem !important; font-weight: 900 !important; }
-h2 { color: #003d7a !important; font-size: 1.8rem !important; font-weight: 700 !important; }
-h3 { color: #003d7a !important; font-size: 1.3rem !important; font-weight: 600 !important; }
-p, li, span { color: #4a6fa5 !important; font-size: 14px !important; line-height: 1.6 !important; }
+section[data-testid="stSidebar"] .stToggle [role="switch"] {
+    border-radius: 12px !important;
+}
+
+h1 { color: var(--text-primary) !important; font-size: 2.2rem !important; font-weight: 700 !important; }
+h2 { color: var(--text-primary) !important; font-size: 1.5rem !important; font-weight: 700 !important; }
+h3 { color: var(--text-primary) !important; font-size: 1.1rem !important; font-weight: 600 !important; }
+p, li, span { color: var(--text-secondary) !important; font-size: 14px !important; line-height: 1.6 !important; }
 
 .kpi-card {
-    background: linear-gradient(135deg, #1a3a52 0%, #254565 100%) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid #FF6B6B !important;
-    border-radius: 16px !important;
-    padding: 28px 24px !important;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--violet), transparent);
-    box-shadow: 0 0 20px rgba(0, 61, 122,0.6);
-}
-
-.kpi-card::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; right: -1px;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(0, 61, 122,0.1) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
 .kpi-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(0, 61, 122,0.6);
-    box-shadow: 0 16px 48px rgba(0, 61, 122,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-light);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1) !important;
 }
 
-.kpi-label { color: #c0d0e0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 600; }
-.kpi-value { color: #FF6B6B; font-size: 2.4rem; font-weight: 900; margin-bottom: 8px; }
-.kpi-up { color: #4ADE80; font-size: 0.95rem; font-weight: 700; }
-.kpi-down { color: #FF6B6B; font-size: 0.95rem; font-weight: 700; }
-.kpi-flat { color: #c0d0e0; font-size: 0.95rem; }
+.kpi-label { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+.kpi-value { color: var(--text-primary); font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; font-family: 'JetBrains Mono'; }
+.kpi-up { color: var(--success); font-size: 0.9rem; font-weight: 600; }
+.kpi-down { color: var(--danger); font-size: 0.9rem; font-weight: 600; }
+.kpi-flat { color: var(--text-secondary); font-size: 0.9rem; }
 
 .sec-title {
-    color: #003d7a;
-    font-size: 1.3rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
     font-weight: 700;
-    border-left: 4px solid #003d7a;
-    padding-left: 16px;
-    margin: 36px 0 24px 0;
-    letter-spacing: 0.5px;
+    margin: 24px 0 16px 0;
+    letter-spacing: -0.5px;
     position: relative;
 }
 
-.sec-title::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--violet), transparent);
-    box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
-}
-
 .alert-up {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    border-radius: 12px;
-    padding: 16px 20px;
+    background: #DCFCE7;
+    border: 1px solid #86EFAC;
+    border-radius: 8px;
+    padding: 12px 16px;
     margin: 12px 0;
-    color: #10B981;
-    font-size: 0.95rem;
-    font-weight: 700;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .alert-down {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    border-radius: 12px;
-    padding: 16px 20px;
+    background: #FEE2E2;
+    border: 1px solid #FECACA;
+    border-radius: 8px;
+    padding: 12px 16px;
     margin: 12px 0;
-    color: #EF4444;
-    font-size: 0.95rem;
-    font-weight: 700;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .alert-ok {
-    background: linear-gradient(135deg, rgba(0, 61, 122,0.15), rgba(167, 139, 250, 0.05));
-    border: 1px solid rgba(0, 61, 122,0.4);
-    border-radius: 12px;
-    padding: 16px 20px;
-    color: var(--cyan);
-    font-size: 0.95rem;
-    font-weight: 700;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(0, 61, 122,0.1);
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .rank-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #ffffff 0%, #f5f8fc 100%);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin: 12px 0;
-    border: 1.5px solid rgba(0, 61, 122,0.4);
-    border-left: 4px solid var(--violet);
-    box-shadow: 0 4px 12px rgba(0, 61, 122,0.12);
-    transition: all 0.3s ease;
+    background: var(--card);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
 }
 
 .rank-row:hover {
-    background: linear-gradient(135deg, #f8fafb 0%, #f0f5fa 100%);
-    border-color: rgba(0, 61, 122,0.7);
-    box-shadow: 0 8px 24px rgba(0, 61, 122,0.2);
+    background: var(--card);
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
 }
 
-.rank-num { color: #0F172A; font-size: 0.8rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan), var(--violet)); border-radius: 8px; padding: 8px 14px; }
-.rank-name { color: var(--cyan); font-weight: 700; margin-left: 16px; }
-.rank-price { color: var(--text-secondary); font-size: 0.9rem; font-family: 'JetBrains Mono'; }
+.rank-num { color: white; font-size: 0.75rem; font-weight: 700; background: var(--primary); border-radius: 4px; padding: 6px 10px; }
+.rank-name { color: var(--text-primary); font-weight: 600; margin-left: 12px; }
+.rank-price { color: var(--text-secondary); font-size: 0.85rem; font-family: 'JetBrains Mono'; }
 
 .spark-badge {
-    background: linear-gradient(135deg, var(--violet), var(--cyan));
-    color: #0F172A;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 0.85rem;
-    font-weight: 800;
+    background: var(--primary);
+    color: white;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
     display: inline-block;
-    margin-bottom: 14px;
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.6), 0 0 40px rgba(0, 61, 122,0.3);
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
 }
 
 .spark-note {
-    background: linear-gradient(135deg, rgba(42, 69, 96, 0.8), rgba(26, 53, 80, 0.8));
-    border: 1px solid rgba(167, 139, 250, 0.4);
-    border-radius: 12px;
-    padding: 18px 20px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 16px;
     color: var(--text-secondary);
     font-size: 0.9rem;
-    margin-bottom: 20px;
-    line-height: 1.7;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 0 15px rgba(167, 139, 250, 0.15);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .stTabs [data-baseweb="tab-list"] {
-    background: linear-gradient(90deg, rgba(100, 180, 220, 0.15), rgba(100, 180, 220, 0.05)) !important;
-    border-bottom: 2px solid rgba(0, 61, 122,0.3) !important;
-    border-radius: 12px 12px 0 0;
+    background: transparent !important;
+    border-bottom: 1px solid var(--border) !important;
+    border-radius: 0;
 }
 .stTabs [data-baseweb="tab"] {
-    color: rgba(240, 249, 255, 0.7) !important;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 16px 24px !important;
-    font-size: 0.95rem !important;
-    font-weight: 700 !important;
-    border-bottom: 3px solid transparent !important;
-    transition: all 0.3s ease !important;
-    background: rgba(100, 180, 220, 0.08);
+    color: var(--text-secondary) !important;
+    border-radius: 0 !important;
+    padding: 12px 16px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid transparent !important;
+    transition: all 0.2s ease !important;
+    background: transparent;
 }
 .stTabs [aria-selected="true"] {
-    color: white !important;
-    border-bottom: 3px solid var(--cyan) !important;
-    text-shadow: 0 0 10px rgba(0, 61, 122,0.5);
-    background: linear-gradient(135deg, rgba(0, 61, 122,0.25), rgba(167, 139, 250, 0.15)) !important;
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary) !important;
+    text-shadow: none;
+    background: transparent !important;
 }
 
 .stDataFrame {
-    border: 2px solid #3a6ba5 !important;
-    border-radius: 12px !important;
-    background: linear-gradient(135deg, #3a6ba5 0%, #2a5090 100%) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    background: var(--card) !important;
     overflow: hidden !important;
 }
 
 .stDataFrame table {
-    background: #3a6ba5 !important;
-    color: white !important;
+    background: var(--card) !important;
+    color: var(--text-primary) !important;
 }
 
 .stDataFrame th {
-    background: #2a5090 !important;
-    color: white !important;
-    font-weight: 700 !important;
+    background: var(--border) !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
 }
 
 .stDataFrame td {
-    color: white !important;
-    background: #3a6ba5 !important;
+    color: var(--text-primary) !important;
+    background: var(--card) !important;
 }
 
 .stDataFrame tr:hover {
-    background: #4a7fbf !important;
+    background: #F9FAFB !important;
 }
 
-.stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label { color: var(--text-primary) !important; font-size: 0.85rem !important; font-weight: 700 !important; }
+.stMultiSelect label, .stSelectbox label, .stSlider label, .stToggle label { color: var(--text-secondary) !important; font-size: 0.75rem !important; font-weight: 600 !important; }
 
 .stButton > button {
-    background: linear-gradient(135deg, #003d7a 0%, #002d5a 100%) !important;
-    color: #ffffff !important;
-    border: 2px solid #003d7a !important;
-    border-radius: 12px !important;
-    font-weight: 900 !important;
-    font-size: 1.1rem !important;
-    padding: 14px 28px !important;
-    box-shadow: 0 4px 16px rgba(0, 61, 122, 0.4) !important;
-    transition: all 0.3s ease !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+    background: var(--primary) !important;
+    color: white !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
+    transition: all 0.2s ease !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
 }
 .stButton > button:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, #004a9e 0%, #003d7a 100%) !important;
-    box-shadow: 0 8px 24px rgba(0, 61, 122, 0.6) !important;
-    color: #ffffff !important;
+    background: var(--primary-light) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    color: white !important;
+    transform: translateY(-1px);
 }
 
-.stAlert { border-radius: 12px !important; border: 1px solid !important; backdrop-filter: blur(8px); }
+.stAlert { border-radius: 8px !important; border: 1px solid !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -355,14 +317,14 @@ def load(query: str) -> pd.DataFrame:
     except Exception:
         return pd.DataFrame()
 
-COLORS = {"bitcoin": "#06B6D4", "ethereum": "#A78BFA", "solana": "#F59E0B", "ripple": "#EC4899", "binancecoin": "#14B8A6"}
+COLORS = {"bitcoin": "#2563EB", "ethereum": "#7C3AED", "solana": "#16A34A", "ripple": "#0EA5E9", "binancecoin": "#D97706"}
 
 LAY = dict(
-    plot_bgcolor="#fafbfd", paper_bgcolor="#f5f8fc",
-    font=dict(color="#1a2942", size=12, family="Space Grotesk"),
-    xaxis=dict(gridcolor="#d0e4f7", zeroline=False, showgrid=True),
-    yaxis=dict(gridcolor="#d0e4f7", zeroline=False, showgrid=True),
-    legend=dict(bgcolor="rgba(255, 255, 255, 0.95)", bordercolor="#d0e4f7", borderwidth=1, font=dict(color="#1a2942")),
+    plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
+    font=dict(color="#0F172A", size=12, family="Inter"),
+    xaxis=dict(gridcolor="#F1F5F9", zeroline=False, showgrid=True),
+    yaxis=dict(gridcolor="#F1F5F9", zeroline=False, showgrid=True),
+    legend=dict(bgcolor="rgba(255, 255, 255, 0.95)", bordercolor="#E2E8F0", borderwidth=1, font=dict(color="#0F172A")),
     margin=dict(l=10, r=10, t=40, b=10),
     hovermode="x unified",
 )
@@ -370,29 +332,29 @@ LAY = dict(
 with st.sidebar:
     # Header
     st.markdown("""
-    <div style='text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid rgba(255,107,107,0.3)'>
-        <h3 style='color:#ffffff;margin:0;font-size:1.4rem;font-weight:800;letter-spacing:0.5px'>Crypto Dashboard</h3>
-        <p style='color:#8090a0;margin:8px 0 0 0;font-size:0.8rem;font-weight:500'>Real-time Analytics</p>
+    <div style='text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #E2E8F0'>
+        <h3 style='color:#0F172A;margin:0;font-size:1.3rem;font-weight:700;letter-spacing:-0.5px'>Crypto Dashboard</h3>
+        <p style='color:#64748B;margin:8px 0 0 0;font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.5px'>Real-time Analytics</p>
     </div>
     """, unsafe_allow_html=True)
 
     # Cryptocurrencies Section
-    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Cryptocurrencies</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#0F172A;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px'>Cryptocurrencies</div>", unsafe_allow_html=True)
     all_coins = ["bitcoin", "ethereum", "ripple", "binancecoin", "solana"]
     selected = st.multiselect("", all_coins, default=all_coins, label_visibility="collapsed")
 
     # Time Period Section
-    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Time Period</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#0F172A;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;margin-top:20px'>Time Period</div>", unsafe_allow_html=True)
     periode = st.selectbox("", ["Last Hour", "Last 6 Hours", "Last 24 Hours", "Last 7 Days", "Full History"], index=2, label_visibility="collapsed")
 
     # Alert Threshold Section
-    st.markdown("<div style='color:#FF6B6B;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px;display:flex;align-items:center'><span style='display:inline-block;width:3px;height:16px;background:#FF6B6B;margin-right:8px;border-radius:2px'></span>Alert Threshold (%)</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#0F172A;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;margin-top:20px'>Alert Threshold (%)</div>", unsafe_allow_html=True)
     seuil = st.slider("", 1, 20, 5, label_visibility="collapsed")
 
     # Settings Section
-    st.markdown("<div style='margin-top:24px;padding-top:16px;border-top:2px solid rgba(255,107,107,0.3)'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:24px;padding-top:16px;border-top:1px solid #E2E8F0'></div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='color:#c0d0e0;font-weight:600;font-size:0.9rem;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between'><span>Auto-Refresh (60s)</span></div>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#0F172A;font-weight:600;font-size:0.9rem;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between'><span>Auto-Refresh (60s)</span></div>", unsafe_allow_html=True)
     auto_ref = st.toggle("", value=False, label_visibility="collapsed")
 
     # Refresh Button
@@ -402,9 +364,9 @@ with st.sidebar:
 
     # Footer
     st.markdown(f"""
-    <div style='margin-top:24px;padding-top:16px;border-top:2px solid rgba(255,107,107,0.2);text-align:center'>
-        <p style='color:#8090a0;font-size:0.75rem;margin:0;font-weight:500'>Mis à jour</p>
-        <p style='color:#FF6B6B;font-size:0.85rem;margin:4px 0 0 0;font-weight:700;letter-spacing:0.5px'>{datetime.now().strftime('%H:%M:%S')}</p>
+    <div style='margin-top:24px;padding-top:16px;border-top:1px solid #E2E8F0;text-align:center'>
+        <p style='color:#64748B;font-size:0.75rem;margin:0;font-weight:500;text-transform:uppercase'>Updated</p>
+        <p style='color:#2563EB;font-size:0.9rem;margin:4px 0 0 0;font-weight:700;letter-spacing:-0.5px'>{datetime.now().strftime('%H:%M:%S')}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -434,10 +396,10 @@ dom_df = load(f"WITH latest AS (SELECT DISTINCT ON (coin_id) coin_id, name, mark
 
 data_count = len(raw_df) if not raw_df.empty else 0
 date_range = f"{raw_df['fetched_at'].min().strftime('%Y-%m-%d') if not raw_df.empty else 'N/A'} to {raw_df['fetched_at'].max().strftime('%Y-%m-%d') if not raw_df.empty else 'N/A'}"
-st.markdown(f"""<div style='background:linear-gradient(135deg, #f0f5fa, #ffffff);padding:20px;border-radius:12px;border-left:4px solid #06B6D4;margin-bottom:20px'>
-<h1 style='margin-bottom:8px;color:#1a2942'>Crypto Data Pipeline</h1>
-<p style='color:#4a6fa5;font-size:0.95rem;margin:8px 0'><b style='color:#003d7a'>{data_count:,}</b> data points · Period: <b>{periode}</b> · <b>{len(selected)}</b> Assets</p>
-<p style='color:#4a6fa5;font-size:0.85rem;margin:0'>Data Range: {date_range}</p>
+st.markdown(f"""<div style='background:var(--card);padding:20px;border-radius:12px;border:1px solid #E2E8F0;box-shadow: 0 1px 3px rgba(0,0,0,0.06);margin-bottom:20px'>
+<h1 style='margin-bottom:8px;color:#0F172A'>Crypto Data Pipeline</h1>
+<p style='color:#64748B;font-size:0.95rem;margin:8px 0'><b style='color:#2563EB'>{data_count:,}</b> data points · Period: <b>{periode}</b> · <b>{len(selected)}</b> Assets</p>
+<p style='color:#64748B;font-size:0.85rem;margin:0'>Data Range: {date_range}</p>
 </div>""", unsafe_allow_html=True)
 
 if not raw_df.empty:
@@ -453,7 +415,7 @@ if not raw_df.empty:
 else:
     st.warning("No data available. Please start the pipeline first.")
 
-st.markdown("<hr style='border-color:#d0e4f7;margin:14px 0 20px'>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color:#E2E8F0;margin:14px 0 20px'>", unsafe_allow_html=True)
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["Overview", "Technical Analysis", "Alerts & Volume", "Kafka Streaming", "Spark Analytics"])
 
